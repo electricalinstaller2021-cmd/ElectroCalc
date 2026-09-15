@@ -2216,8 +2216,8 @@ async function sendElectroAI(){
   const loading='Saya sedang menganalisis parameter kalkulator...'; addElectroMessage('assistant',loading);
   const box=document.getElementById('electro-ai-messages'); const last=box.lastElementChild;
   try{
-   // const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:getElectroContext()})});
-      const r=await fetch('https://electrocalc.electricalinstaller2021.workers.dev/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:getElectroContext()})});
+    const r=await fetch('https://electrocalc.electricalinstaller2021.workers.dev/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:getElectroContext()})});
+     // const r=await fetch('https://electrocalc.electricalinstaller2021.workers.dev/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:getElectroContext()})});
     const data=await r.json(); if(!r.ok) throw new Error(data.error||'Server AI tidak merespons');
     last.textContent=data.reply||'Tidak ada jawaban.';
   }catch(e){ last.textContent='Belum tersambung ke server AI. Pastikan backend /api/chat sudah dijalankan.\n\n'+e.message; }
