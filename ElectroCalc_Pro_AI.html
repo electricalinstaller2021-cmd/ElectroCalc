@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroCalc Pro - Chint Standard & Cable Sizing Tools</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0f172a',
+                        },
+                        chint: {
+                            500: '#1e40af',
+                            600: '#1d4ed8',
+                            700: '#1e3a8a',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .card-print {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                background: white !important;
+                color: black !important;
+            }
+        }
+
+        /* =========================
+           MOBILE-FIRST RESPONSIVE UI
+           ========================= */
+        html { -webkit-text-size-adjust: 100%; }
+        body { overflow-x: hidden; }
+        button, input, select, textarea { touch-action: manipulation; }
+        input, select, textarea { min-height: 44px; }
+        button { min-height: 44px; }
+        .no-scrollbar { scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        @media (max-width: 640px) {
+            body {
+                min-width: 0 !important;
+                font-size: 14px;
+                padding-bottom: 92px;
+            }
+
+            header {
+                position: sticky;
+                top: 0;
+            }
+
+            header > div {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            header .h-16 {
+                height: auto !important;
+                min-height: 58px;
+                padding: 8px 0;
+                gap: 8px;
+            }
+
+            header .w-10.h-10 {
+                width: 38px !important;
+                height: 38px !important;
+                min-width: 38px;
+            }
+
+            header h1 {
+                font-size: 15px !important;
+                line-height: 1.15;
+            }
+
+            header h1 span {
+                display: none;
+            }
+
+            header p {
+                font-size: 9px !important;
+                line-height: 1.25;
+                max-width: 230px;
+            }
+
+            header .flex.items-center.gap-2.sm\:gap-3 {
+                gap: 4px !important;
+            }
+
+            header .flex.items-center.gap-2.sm\:gap-3 button {
+                min-width: 42px;
+                padding: 8px !important;
+                justify-content: center;
+            }
+
+            nav {
+                margin: 0 -12px;
+                padding: 6px 12px 7px !important;
+                gap: 4px !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity;
+            }
+
+            nav .tab-btn {
+                min-height: 42px;
+                padding: 9px 12px !important;
+                font-size: 10px !important;
+                scroll-snap-align: start;
+                flex: 0 0 auto;
+            }
+
+            main {
+                padding: 12px !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            .tab-content {
+                gap: 12px !important;
+            }
+
+            .tab-content > div:first-child h2 {
+                font-size: 14px !important;
+                line-height: 1.35;
+            }
+
+            .tab-content > div:first-child p {
+                font-size: 10px !important;
+                line-height: 1.5;
+            }
+
+            /* Cards */
+            .bg-slate-800,
+            .bg-slate-800\/60 {
+                border-radius: 14px !important;
+            }
+
+            .shadow-xl {
+                box-shadow: 0 8px 24px rgba(0,0,0,.22) !important;
+            }
+
+            /* Make every form control comfortable for fingers and iOS */
+            input, select, textarea {
+                font-size: 16px !important;
+                line-height: 1.2;
+            }
+
+            select {
+                padding-top: 10px !important;
+                padding-bottom: 10px !important;
+            }
+
+            label {
+                font-size: 11px !important;
+                line-height: 1.35;
+            }
+
+            /* Compact the large desktop paddings */
+            .p-5 { padding: 14px !important; }
+            .p-4 { padding: 12px !important; }
+            .p-3\.5 { padding: 11px !important; }
+
+            /* Result cards: 2 columns where useful */
+            #tab-motor .grid.grid-cols-2.sm\:grid-cols-4,
+            #tab-cable .grid.grid-cols-1.sm\:grid-cols-3 {
+                gap: 8px !important;
+            }
+
+            #tab-motor .grid.grid-cols-2.sm\:grid-cols-4 > div {
+                padding: 10px 6px !important;
+            }
+
+            #tab-motor .grid.grid-cols-2.sm\:grid-cols-4 .text-xl,
+            #tab-cable .grid.grid-cols-1.sm\:grid-cols-3 .text-2xl,
+            #tab-capacitor .grid.grid-cols-1.sm\:grid-cols-3 .text-2xl {
+                font-size: 17px !important;
+            }
+
+            /* Prevent long model names from breaking cards */
+            #res-mcb-rating,
+            #res-contactor-rating,
+            #res-tor-range,
+            #res-cable-size,
+            #cres-mcb,
+            #capres-chint-contactor,
+            #capres-chint-controller {
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+
+            /* Tables stay readable and swipe horizontally */
+            .overflow-x-auto {
+                max-width: 100%;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 620px;
+            }
+
+            #tab-project table {
+                min-width: 560px;
+            }
+
+            /* Buttons become easier to tap */
+            button {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .tab-content button {
+                min-height: 44px;
+            }
+
+            /* Preset buttons: horizontal touch carousel */
+            #tab-motor .overflow-x-auto {
+                margin-right: -14px;
+                padding-right: 14px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #tab-motor .overflow-x-auto .flex {
+                width: max-content;
+            }
+
+            /* Range controls */
+            input[type="range"] {
+                min-height: 32px;
+                height: 32px;
+            }
+
+            /* Wiring SVG/container */
+            #starter-wiring-diagram {
+                padding: 10px !important;
+            }
+
+            #diagram-content {
+                justify-content: flex-start !important;
+                min-height: 120px;
+                padding: 10px 2px !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #diagram-content svg {
+                min-width: 720px;
+                max-width: none;
+            }
+
+            /* Floating tools: full-width mobile sheets */
+            #electro-ai {
+                left: 10px !important;
+                right: 10px !important;
+                bottom: 10px !important;
+                z-index: 100 !important;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #electro-ai-toggle {
+                align-self: flex-end;
+                min-height: 48px;
+                padding: 10px 16px !important;
+                font-size: 13px;
+            }
+
+            #electro-ai-panel {
+                width: 100% !important;
+                max-width: none !important;
+                max-height: min(72vh, 620px);
+                margin-top: 8px !important;
+                border-radius: 16px !important;
+            }
+
+            #electro-ai-messages {
+                height: 38vh !important;
+                max-height: 330px;
+            }
+
+            #electro-ai-input {
+                min-height: 48px;
+            }
+
+            #electro-ai-send {
+                min-width: 72px;
+            }
+
+            /* CHINT master panel */
+            #chint-master-panel {
+                left: 10px !important;
+                right: 10px !important;
+                bottom: 70px !important;
+                width: auto !important;
+                max-height: 68vh !important;
+                overflow-y: auto !important;
+                z-index: 99 !important;
+                border-radius: 16px !important;
+            }
+
+            #chint-master-btn {
+                left: 10px !important;
+                bottom: 10px !important;
+                z-index: 98 !important;
+                min-height: 48px;
+            }
+
+            /* Avoid floating controls covering the last content */
+            #tab-project {
+                padding-bottom: 30px;
+            }
+
+            /* Modal/dialog-like elements should fit the viewport */
+            [class*="fixed"][class*="inset-0"] {
+                padding: 10px !important;
+            }
+
+            /* Better print button labels */
+            .no-print button span.hidden.sm\:inline {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            header p { max-width: 180px; }
+            nav .tab-btn {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+            main { padding: 9px !important; }
+            #electro-ai-toggle { font-size: 12px; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            button:hover,
+            a:hover {
+                filter: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="bg-slate-800/90 backdrop-blur border-b border-slate-700/80 sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-chint-600 to-amber-500 flex items-center justify-center shadow-lg shadow-chint-600/30">
+                        <i class="fa-solid fa-bolt text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                            ElectroCalc <span class="bg-chint-600/30 text-blue-300 text-xs px-2 py-0.5 rounded border border-chint-500/40 font-mono">CHINT EDITION v3.0</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">Kalkulator Motor, Kabel (Mulai 0.5mm²) & Komponent Sizing (Standar CHINT)</p>
+                    </div>
+                </div>
+
+                <!-- Header Quick Controls -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="exportToPrint()" class="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold px-3 py-2 rounded-lg transition border border-slate-600">
+                        <i class="fa-solid fa-print text-amber-400"></i>
+                        <span class="hidden sm:inline">Cetak BOM / Laporan</span>
+                    </button>
+                    <button onclick="resetAllCalculators()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-red-400 text-xs font-semibold px-3 py-2 rounded-lg transition border border-slate-700">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span class="hidden sm:inline">Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <nav class="flex space-x-1 border-t border-slate-700/50 pt-2 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('tab-motor')" id="btn-tab-motor" class="tab-btn active text-brand-400 border-brand-500 border-b-2 py-2.5 px-4 text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-engine text-sm"></i>
+                    Sizing Motor & Komponen CHINT
+                </button>
+                <button onclick="switchTab('tab-cable')" id="btn-tab-cable" class="tab-btn text-slate-400 hover:text-slate-200 py-2.5 px-4 text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-plug text-sm"></i>
+                    Sizing Kabel (Mulai 0.5 mm²)
+                </button>
+                <button onclick="switchTab('tab-capacitor')" id="btn-tab-capacitor" class="tab-btn text-slate-400 hover:text-slate-200 py-2.5 px-4 text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-car-battery text-sm"></i>
+                    Capacitor Bank CHINT
+                </button>
+                <button onclick="switchTab('tab-project')" id="btn-tab-project" class="tab-btn text-slate-400 hover:text-slate-200 py-2.5 px-4 text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition relative">
+                    <i class="fa-solid fa-list-check text-sm"></i>
+                    Rekap Proyek & BOM Panel
+                    <span id="project-count-badge" class="ml-1 bg-brand-500 text-white text-[10px] px-1.5 py-0.2 rounded-full hidden">0</span>
+                </button>
+                <button onclick="switchTab('tab-kha-ref')" id="btn-tab-kha-ref" class="tab-btn text-slate-400 hover:text-slate-200 py-2.5 px-4 text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition">
+                    <i class="fa-solid fa-table text-sm"></i>
+                    Tabel KHA PUIL (0.5 - 300 mm²)
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: SIZING MOTOR INDUKSI & KOMPONEN CHINT -->
+        <section id="tab-motor" class="tab-content block space-y-6">
+            <!-- Header Section -->
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-industry text-amber-500"></i>
+                        Kalkulator Sizing Motor & Bill of Materials (BOM CHINT Electric)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Menghitung arus nominal ($I_n$), menentukan Breaker (MCB/MCCB CHINT), Kontaktor NXC, Relay TOR NXR, Relay Proteksi, hingga ukuran kabel daya & kontrol (mulai 0.5mm²).
+                    </p>
+                </div>
+                <!-- Quick Preset Motor Sizes -->
+                <div class="w-full md:w-auto overflow-x-auto">
+                    <div class="text-[11px] font-medium text-slate-400 mb-1.5">Preset Power Cepat:</div>
+                    <div class="flex gap-1.5 flex-nowrap">
+                        <button onclick="applyMotorPreset(0.37, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">0.37kW (0.5HP)</button>
+                        <button onclick="applyMotorPreset(0.75, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">0.75kW (1HP)</button>
+                        <button onclick="applyMotorPreset(2.2, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">2.2kW (3HP)</button>
+                        <button onclick="applyMotorPreset(5.5, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">5.5kW (7.5HP)</button>
+                        <button onclick="applyMotorPreset(11, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">11kW (15HP)</button>
+                        <button onclick="applyMotorPreset(22, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">22kW (30HP)</button>
+                        <button onclick="applyMotorPreset(45, 'kW')" class="px-2 py-1 text-xs bg-slate-700 hover:bg-chint-600 rounded text-slate-200 font-mono transition">45kW (60HP)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form & Results Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Inputs Column (5 Cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                        <h3 class="text-sm font-semibold text-brand-400 uppercase tracking-wider flex items-center justify-between border-b border-slate-700 pb-2">
+                            <span><i class="fa-solid fa-sliders mr-2"></i> Parameter Input Motor</span>
+                            <span class="text-[10px] bg-chint-600/30 text-blue-300 px-2 py-0.5 rounded border border-chint-500/30">Standar CHINT</span>
+                        </h3>
+
+                        <!-- Motor Power Input -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-2">
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Daya Motor / Rating</label>
+                                <input type="number" id="motor-power" value="7.5" step="0.01" min="0.1" oninput="calculateMotor()"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Satuan</label>
+                                <select id="motor-power-unit" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                    <option value="kW" selected>kW</option>
+                                    <option value="HP">HP / PK</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Phase & Voltage -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Jumlah Fasa</label>
+                                <select id="motor-phase" onchange="toggleMotorPhaseOptions(); calculateMotor();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                    <option value="3" selected>3 Fasa (380V - 415V)</option>
+                                    <option value="1">1 Fasa (220V - 230V)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Tegangan Operasi (V)</label>
+                                <select id="motor-voltage" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                                    <option value="380" selected>380 Volt</option>
+                                    <option value="400">400 Volt</option>
+                                    <option value="415">415 Volt</option>
+                                    <option value="220">220 Volt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Starting Method -->
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Metode Starter Motor</label>
+                            <select id="motor-starter" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                <option value="DOL" selected>Direct On Line (DOL)</option>
+                                <option value="STAR_DELTA">Star - Delta (Y - Δ)</option>
+                                <option value="SOFT_STARTER">Soft Starter CHINT (NJR2)</option>
+                                <option value="VFD">Inverter / VFD CHINT (NVF2G / NVF300)</option>
+                            </select>
+                            <p id="starter-desc" class="text-[11px] text-slate-400 mt-1 italic">DOL biasa digunakan untuk daya &lt; 5.5 kW. Star-Delta / Soft Starter / VFD untuk daya lebih besar.</p>
+                        </div>
+
+                        <!-- Power Factor & Efficiency -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Faktor Daya (Cos φ)</label>
+                                <input type="number" id="motor-cosphi" value="0.85" step="0.01" min="0.5" max="1.0" oninput="calculateMotor()"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Efisiensi Motor (η %)</label>
+                                <input type="number" id="motor-eff" value="88" step="1" min="50" max="99" oninput="calculateMotor()"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                            </div>
+                        </div>
+
+                        <!-- Installation & Distance Parameters -->
+                        <div class="border-t border-slate-700/70 pt-3 space-y-3">
+                            <h4 class="text-xs font-semibold text-slate-400 uppercase">Parameter Instalasi Kabel Daya & Kontrol</h4>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Panjang Kabel (Meter)</label>
+                                    <input type="number" id="motor-cable-len" value="35" min="1" oninput="calculateMotor()"
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Max Tegangan Turun (%)</label>
+                                    <input type="number" id="motor-max-drop" value="3.0" step="0.5" min="1" max="10" oninput="calculateMotor()"
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Konduktor Kabel Daya</label>
+                                    <select id="motor-conductor" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                        <option value="Cu" selected>Tembaga (Cu)</option>
+                                        <option value="Al">Aluminium (Al)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Ukuran Kabel Kontrol</label>
+                                    <select id="motor-control-cable-size" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500 font-mono">
+                                        <option value="0.5">0.5 mm² Cu (NYAF/NYMHY)</option>
+                                        <option value="0.75">0.75 mm² Cu (NYAF/NYMHY)</option>
+                                        <option value="1.0">1.0 mm² Cu (NYAF/NYMHY)</option>
+                                        <option value="1.5" selected>1.5 mm² Cu (NYAF/NYMHY)</option>
+                                        <option value="2.5">2.5 mm² Cu (NYM / NYA)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1">Isolasi Kabel Daya</label>
+                                    <select id="motor-insulation" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                        <option value="PVC" selected>PVC (NYY / NYM / NYA)</option>
+                                        <option value="XLPE">XLPE (N2XY / N2XRY)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Metode Pemasangan Kabel</label>
+                                <select id="motor-install-method" onchange="calculateMotor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+                                    <option value="conduit" selected>Dalam Pipa Conduit / Cable Duct (Udara)</option>
+                                    <option value="open_air">Di Udara Terbuka (Tray Kabel Perforated)</option>
+                                    <option value="underground">Ditanam Dalam Tanah (Direct Buried)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Output Column (7 Cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    
+                    <!-- Motor Key Summary Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Arus Nominal ($I_n$)</span>
+                            <div id="res-motor-flc" class="text-xl font-extrabold text-brand-400 font-mono my-1">15.22 A</div>
+                            <span class="text-[10px] text-slate-500">Full Load Current</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Arus Start Est. ($I_{start}$)</span>
+                            <div id="res-motor-istart" class="text-xl font-extrabold text-amber-400 font-mono my-1">91.32 A</div>
+                            <span id="res-motor-istart-factor" class="text-[10px] text-slate-500">~6x In (DOL)</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Daya Semu (S)</span>
+                            <div id="res-motor-kva" class="text-xl font-extrabold text-purple-400 font-mono my-1">10.02 kVA</div>
+                            <span class="text-[10px] text-slate-500">Input Power kVA</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-3 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">KHA Kabel Min.</span>
+                            <div id="res-motor-kha" class="text-xl font-extrabold text-emerald-400 font-mono my-1">19.03 A</div>
+                            <span class="text-[10px] text-slate-500">125% dari In (PUIL)</span>
+                        </div>
+                    </div>
+
+                    <!-- Detailed CHINT Equipment Sizing Results -->
+                    <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                            <h3 class="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-box-archive text-amber-400"></i>
+                                Rekomendasi Komponen Utama CHINT (Rangkaian Daya)
+                            </h3>
+                            <button onclick="addMotorToProject()" class="bg-chint-600 hover:bg-chint-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-plus"></i>
+                                Tambah ke BOM Panel
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- MCB / MCCB CHINT -->
+                            <div class="bg-slate-900/80 rounded-lg p-3.5 border border-slate-700/60 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-2 h-full bg-chint-600"></div>
+                                <div class="text-xs font-semibold text-slate-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-toggle-on text-brand-400"></i>
+                                    Proteksi Short-Circuit (CHINT Breaker)
+                                </div>
+                                <div id="res-mcb-rating" class="text-base font-bold text-white font-mono my-0.5">MCB CHINT NXB-63 3P C25A</div>
+                                <p id="res-mcb-note" class="text-[11px] text-slate-400 mt-1">Dihitung $1.5 \times - 2.5 \times I_n$ untuk meredam *inrush starting current*.</p>
+                            </div>
+
+                            <!-- Contactor CHINT -->
+                            <div class="bg-slate-900/80 rounded-lg p-3.5 border border-slate-700/60 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+                                <div class="text-xs font-semibold text-slate-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-box text-amber-400"></i>
+                                    Kontaktor Magnetik (CHINT Kategori AC-3)
+                                </div>
+                                <div id="res-contactor-rating" class="text-base font-bold text-white font-mono my-0.5">CHINT NXC-18 (18A AC-3 220V/380V)</div>
+                                <p id="res-contactor-note" class="text-[11px] text-slate-400 mt-1">Rating Kontaktor Utama $\ge I_n$ (15.2A) pada tugas motor AC-3.</p>
+                            </div>
+
+                            <!-- TOR CHINT -->
+                            <div class="bg-slate-900/80 rounded-lg p-3.5 border border-slate-700/60 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-2 h-full bg-red-500"></div>
+                                <div class="text-xs font-semibold text-slate-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-shield-halved text-red-400"></i>
+                                    Thermal Overload Relay (CHINT TOR)
+                                </div>
+                                <div id="res-tor-range" class="text-base font-bold text-white font-mono my-0.5">CHINT NXR-25 (Range 12A - 18A)</div>
+                                <p id="res-tor-note" class="text-[11px] text-slate-400 mt-1">Setelan dial TOR diset tepat di **15.2 A** ($1.0 \times I_n$).</p>
+                            </div>
+
+                            <!-- Power Cable Size (mulai 0.5mm²) -->
+                            <div class="bg-slate-900/80 rounded-lg p-3.5 border border-slate-700/60 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                                <div class="text-xs font-semibold text-slate-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-wire text-emerald-400"></i>
+                                    Kabel Utama Daya (Feeder Motor)
+                                </div>
+                                <div id="res-cable-size" class="text-base font-bold text-white font-mono my-0.5">NYY 4 x 2.5 mm² (Cu/PVC)</div>
+                                <p id="res-cable-note" class="text-[11px] text-slate-400 mt-1">KHA kabel nominal (25A) &gt; Minimum KHA (19.0A). Kabel Arde Min: 2.5 mm².</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Supporting Components Section (Komponen Lini Kontrol & Proteksi CHINT) -->
+                        <div class="border-t border-slate-700/70 pt-4 space-y-3">
+                            <h4 class="text-xs font-bold text-brand-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-microchip text-brand-400"></i>
+                                Komponen Pendukung Panel (Lini Kontrol & Aksesoris CHINT)
+                            </h4>
+                            
+                            <div id="supporting-components-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-mono">
+                                <!-- Dynamic JS Population -->
+                            </div>
+                        </div>
+
+                        <!-- Voltage Drop & Conduit Detailed Summary -->
+                        <div class="bg-slate-900/50 rounded-lg p-4 border border-slate-700/40 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Verifikasi Susut Tegangan (Voltage Drop) & Pipa Conduit</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-slate-800/80 p-2.5 rounded border border-slate-700">
+                                    <span class="text-slate-400 block text-[11px]">Susut Tegangan ($\Delta V$):</span>
+                                    <span id="res-vdrop-volt" class="font-mono font-bold text-white text-sm">3.48 Volt</span>
+                                </div>
+                                <div class="bg-slate-800/80 p-2.5 rounded border border-slate-700">
+                                    <span class="text-slate-400 block text-[11px]">Persentase Drop (%):</span>
+                                    <span id="res-vdrop-percent" class="font-mono font-bold text-emerald-400 text-sm">0.92 % (Aman &lt; 3%)</span>
+                                </div>
+                                <div class="bg-slate-800/80 p-2.5 rounded border border-slate-700">
+                                    <span class="text-slate-400 block text-[11px]">Ukuran Pipa Conduit Min:</span>
+                                    <span id="res-conduit-size" class="font-mono font-bold text-amber-400 text-sm">Pipa 20 mm (3/4")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schematic Component Wiring Guide Banner -->
+                        <div id="starter-wiring-diagram" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs">
+                            <div class="font-semibold text-brand-300 mb-2 flex items-center justify-between">
+                                <span><i class="fa-solid fa-sitemap mr-1.5"></i> Skema Rangkaian Daya & Kontrol (<span id="diagram-starter-title">DOL</span>)</span>
+                                <span class="text-[10px] text-slate-500 font-mono">Urutan Sambungan CHINT</span>
+                            </div>
+                            <div id="diagram-content" class="flex items-center justify-center gap-2 py-3 overflow-x-auto text-slate-300 font-mono text-[11px]">
+                                <!-- Dynamic via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 2: CABLE SIZING & VOLTAGE DROP CALCULATOR (MULAI 0.5 MM²) -->
+        <section id="tab-cable" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plug-circle-bolt text-brand-400"></i>
+                    Kalkulator Penampang Kabel Umum & Susut Tegangan (Mulai Ukuran 0.5 mm²)
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">
+                    Hitung ukuran kabel transmisi, penerangan, stop kontak, heater, atau kontrol mulai dari penampang **0.5 mm²**, **0.75 mm²**, **1.0 mm²**, **1.5 mm²** hingga **300 mm²**.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Inputs Cable -->
+                <div class="lg:col-span-5 bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                    <h3 class="text-sm font-semibold text-brand-400 uppercase tracking-wider border-b border-slate-700 pb-2">
+                        Parameter Beban & Kabel
+                    </h3>
+
+                    <!-- Calculation Mode Input -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Input Beban Berdasarkan</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="setCableInputMode('power')" id="btn-cable-mode-power" class="px-3 py-2 text-xs rounded-lg font-medium bg-brand-600 text-white border border-brand-500">Daya (kW / Watt)</button>
+                            <button type="button" onclick="setCableInputMode('current')" id="btn-cable-mode-current" class="px-3 py-2 text-xs rounded-lg font-medium bg-slate-700 text-slate-300 border border-slate-600">Arus Beban (Ampere)</button>
+                        </div>
+                    </div>
+
+                    <!-- Power or Current Value -->
+                    <div id="cable-power-container" class="grid grid-cols-3 gap-2">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Total Daya Beban</label>
+                            <input type="number" id="cable-power-val" value="15" step="0.1" min="0.01" oninput="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Satuan</label>
+                            <select id="cable-power-unit" onchange="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:border-brand-500">
+                                <option value="kW" selected>kW</option>
+                                <option value="W">Watt</option>
+                                <option value="kVA">kVA</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="cable-current-container" class="hidden">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Arus Beban Terpasang ($I_L$)</label>
+                        <div class="relative">
+                            <input type="number" id="cable-current-val" value="5" step="0.1" min="0.01" oninput="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500 pr-12">
+                            <span class="absolute right-3 top-2 text-slate-400 text-xs">Ampere</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase & Voltage -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Sistem Listrik</label>
+                            <select id="cable-phase" onchange="toggleCablePhaseOptions(); calculateCableTab();" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500">
+                                <option value="3" selected>3 Fasa (380V)</option>
+                                <option value="1">1 Fasa (220V)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Tegangan Nominal (V)</label>
+                            <input type="number" id="cable-voltage" value="380" oninput="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <!-- Cosphi & Length -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Faktor Daya (Cos φ)</label>
+                            <input type="number" id="cable-cosphi" value="0.85" step="0.01" min="0.1" max="1" oninput="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Panjang Jalur (Meter)</label>
+                            <input type="number" id="cable-length" value="40" min="1" oninput="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <!-- Material, Insulation, Limit -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Material Penghantar</label>
+                            <select id="cable-material" onchange="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500">
+                                <option value="Cu" selected>Tembaga (Cu)</option>
+                                <option value="Al">Aluminium (Al)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Jenis Isolasi</label>
+                            <select id="cable-insulation" onchange="calculateCableTab()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500">
+                                <option value="PVC" selected>PVC (NYM/NYY/NYAF)</option>
+                                <option value="XLPE">XLPE (N2XY)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Batas Max Susut Tegangan (%)</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" id="cable-max-vdrop-slider" min="1" max="10" step="0.5" value="3" oninput="document.getElementById('cable-max-vdrop-val').value = this.value; calculateCableTab();" class="w-full accent-brand-500">
+                            <input type="number" id="cable-max-vdrop-val" value="3.0" step="0.5" min="1" max="10" oninput="document.getElementById('cable-max-vdrop-slider').value = this.value; calculateCableTab();" class="w-20 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center font-mono">
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                            <span>1% (Sangat Ketat)</span>
+                            <span>3% (Standar PUIL Penerangan/Daya)</span>
+                            <span>5% (Max Sub-feeder)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cable Results Column -->
+                <div class="lg:col-span-7 space-y-4">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Arus Beban ($I_n$)</span>
+                            <div id="cres-current" class="text-2xl font-extrabold text-brand-400 font-mono my-1">26.81 A</div>
+                            <span class="text-[10px] text-slate-500">Arus Kontinu Beban</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Ukuran Kabel Min.</span>
+                            <div id="cres-size" class="text-2xl font-extrabold text-emerald-400 font-mono my-1">6.0 mm²</div>
+                            <span id="cres-type-name" class="text-[10px] text-slate-400">NYY 4 x 6 mm² (KHA 44A)</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Susut Tegangan</span>
+                            <div id="cres-vdrop" class="text-2xl font-extrabold text-amber-400 font-mono my-1">3.12 V (0.82%)</div>
+                            <span id="cres-vdrop-status" class="text-[10px] text-emerald-400 font-semibold">✔ Memenuhi Standar</span>
+                        </div>
+                    </div>
+
+                    <!-- Comprehensive Analysis Card -->
+                    <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                        <h3 class="text-sm font-semibold text-white uppercase tracking-wider border-b border-slate-700 pb-2 flex items-center justify-between">
+                            <span><i class="fa-solid fa-chart-line text-brand-400 mr-2"></i> Rekomendasi Proteksi CHINT & Analisis</span>
+                            <button onclick="addGeneralLoadToProject()" class="bg-chint-600 hover:bg-chint-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-plus"></i>
+                                Tambah ke Rekap Proyek
+                            </button>
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-700/60">
+                                <span class="text-xs text-slate-400 block font-medium mb-1">Proteksi CHINT Breaker (MCB/MCCB)</span>
+                                <div id="cres-mcb" class="text-base font-bold text-white font-mono">CHINT NXB-63 3P C32A</div>
+                                <p class="text-[11px] text-slate-400 mt-1">Dipilih rating standar CHINT di atas arus beban ($I_n$) dan $\le$ KHA Kabel.</p>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-700/60">
+                                <span class="text-xs text-slate-400 block font-medium mb-1">Rugi-Rugi Daya Kabel ($P_{loss}$)</span>
+                                <div id="cres-ploss" class="text-base font-bold text-amber-400 font-mono">116.2 Watt</div>
+                                <p class="text-[11px] text-slate-400 mt-1">Daya terbuang menjadi panas sepanjang jalur kabel.</p>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-700/60">
+                                <span class="text-xs text-slate-400 block font-medium mb-1">Resistansi Kabel Terhitung ($R$)</span>
+                                <div id="cres-resistance" class="text-base font-bold text-white font-mono">0.118 Ω</div>
+                                <p class="text-[11px] text-slate-400 mt-1">Hambatan konduktor pada suhu operasi normal.</p>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-3.5 rounded-lg border border-slate-700/60">
+                                <span class="text-xs text-slate-400 block font-medium mb-1">Tegangan Di Sisi Beban ($V_{load}$)</span>
+                                <div id="cres-vload" class="text-base font-bold text-emerald-400 font-mono">376.88 Volt</div>
+                                <p class="text-[11px] text-slate-400 mt-1">Tegangan efektif aktual di titik beban akhir.</p>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Matrix Table Starting from 0.5 mm2 -->
+                        <div class="pt-2">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase mb-2">Tabel Perbandingan Opsi Ukuran Kabel (Mulai 0.5 mm²)</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs font-mono">
+                                    <thead class="bg-slate-900 text-slate-400 border-b border-slate-700">
+                                        <tr>
+                                            <th class="p-2">Penampang</th>
+                                            <th class="p-2">KHA (Air/Conduit)</th>
+                                            <th class="p-2">Susut Tegangan</th>
+                                            <th class="p-2">Loss Daya</th>
+                                            <th class="p-2">Status PUIL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cable-options-tbody" class="divide-y divide-slate-800">
+                                        <!-- Dynamic JS content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CAPACITOR BANK CHINT CALCULATOR -->
+        <section id="tab-capacitor" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-car-battery text-purple-400"></i>
+                    Kalkulator Koreksi Faktor Daya & Komponen Capacitor Bank CHINT
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">
+                    Hitung daya reaktif (kVAR) dan penentuan komponen CHINT (Kontaktor Khusus Kapasitor CJ19, Breaker NXM, Controller APFC NCF6).
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Input Capacitor -->
+                <div class="lg:col-span-5 bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                    <h3 class="text-sm font-semibold text-brand-400 uppercase tracking-wider border-b border-slate-700 pb-2">
+                        Parameter Beban Sistem
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Total Daya Aktif Beban (kW)</label>
+                        <input type="number" id="cap-power-kw" value="100" min="1" step="1" oninput="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Cos φ Awal ($\cos \phi_1$)</label>
+                            <input type="number" id="cap-cosphi1" value="0.72" step="0.01" min="0.4" max="0.95" oninput="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Cos φ Target ($\cos \phi_2$)</label>
+                            <input type="number" id="cap-cosphi2" value="0.96" step="0.01" min="0.85" max="1.0" oninput="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Tegangan Sistem (Volt)</label>
+                            <input type="number" id="cap-voltage" value="380" oninput="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Frekuensi (Hz)</label>
+                            <input type="number" id="cap-freq" value="50" oninput="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Tipe Koneksi Kapasitor Bank</label>
+                        <select id="cap-connection" onchange="calculateCapacitor()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-brand-500">
+                            <option value="delta" selected>Delta (Δ) - Standar Industri 3-Phase</option>
+                            <option value="star">Star (Y) / Bintang</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/60 text-xs text-slate-400 space-y-1">
+                        <div class="font-semibold text-amber-400"><i class="fa-solid fa-lightbulb mr-1"></i> Informasi PLN:</div>
+                        <p>Faktor daya PLN minimal adalah <strong class="text-white">0.85</strong>. Jika Cos φ &lt; 0.85, pelanggan industri/bisnis dikenakan biaya denda kVARh.</p>
+                    </div>
+                </div>
+
+                <!-- Results Capacitor -->
+                <div class="lg:col-span-7 space-y-4">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Daya Reaktif Min.</span>
+                            <div id="capres-q-kvar" class="text-2xl font-extrabold text-purple-400 font-mono my-1">67.3 kVAR</div>
+                            <span class="text-[10px] text-slate-500">Total Kapasitor Memenuhi</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Penurunan Arus Utama</span>
+                            <div id="capres-current-drop" class="text-2xl font-extrabold text-emerald-400 font-mono my-1">52.3 Ampere</div>
+                            <span id="capres-current-percent" class="text-[10px] text-slate-400">Turun ~25.0% dari Arus Awal</span>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-4 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase">Kapasitansi ($\mu F$ / Phase)</span>
+                            <div id="capres-microfarad" class="text-2xl font-extrabold text-amber-400 font-mono my-1">494.6 µF</div>
+                            <span class="text-[10px] text-slate-500">Kapasitor Koneksi Delta</span>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Details -->
+                    <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                        <h3 class="text-sm font-semibold text-white uppercase tracking-wider border-b border-slate-700 pb-2">
+                            <i class="fa-solid fa-chart-pie text-purple-400 mr-2"></i> Perbandingan Kondisi & Rekomendasi CHINT APFC
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60 space-y-2">
+                                <span class="font-bold text-red-400 uppercase text-[11px] block border-b border-slate-800 pb-1">Kondisi Awal (Sebelum Koreksi)</span>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Cos φ1:</span>
+                                    <span id="capres-cos1-val" class="font-mono text-white">0.72</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Daya Semu ($S_1$):</span>
+                                    <span id="capres-s1" class="font-mono text-white">138.89 kVA</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Arus Total Line ($I_1$):</span>
+                                    <span id="capres-i1" class="font-mono text-red-400 font-bold">211.02 A</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60 space-y-2">
+                                <span class="font-bold text-emerald-400 uppercase text-[11px] block border-b border-slate-800 pb-1">Kondisi Target (Setelah Koreksi)</span>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Cos φ2:</span>
+                                    <span id="capres-cos2-val" class="font-mono text-white">0.96</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Daya Semu ($S_2$):</span>
+                                    <span id="capres-s2" class="font-mono text-white">104.17 kVA</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Arus Total Line ($I_2$):</span>
+                                    <span id="capres-i2" class="font-mono text-emerald-400 font-bold">158.27 A</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHINT Capacitor Switching Components -->
+                        <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60 space-y-3">
+                            <h4 class="text-xs font-bold text-brand-300 uppercase">Komponen Switching & Controller CHINT</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+                                <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                                    <span class="text-slate-400 text-[10px] block">Kontaktor Kapasitor CHINT:</span>
+                                    <span id="capres-chint-contactor" class="text-white font-bold">CHINT CJ19-32 (32A Switching)</span>
+                                </div>
+                                <div class="bg-slate-800 p-2.5 rounded border border-slate-700">
+                                    <span class="text-slate-400 text-[10px] block">Power Factor Controller:</span>
+                                    <span id="capres-chint-controller" class="text-white font-bold">CHINT NCF6-12 (12 Step Auto)</span>
+                                </div>
+                            </div>
+                            <p id="capres-apfc-recommendation" class="text-xs text-slate-400 leading-relaxed font-mono">
+                                Disarankan Panel APFC 6 Step: 1x 10 kVAR + 2x 15 kVAR + 2x 20 kVAR.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PROJECT REKAP & FULL BOM PANEL CHINT -->
+        <section id="tab-project" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-400"></i>
+                        Rekapitulasi Daya Proyek & Bill of Materials (BOM Panel CHINT)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Kumpulkan hasil kalkulasi motor & beban lainnya untuk menentukan total kVA, Main Breaker (MCCB/ACB CHINT), Sizing Trafo & Ekspor Daftar Komponen Siap Cetak.
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="clearProjectList()" class="bg-red-900/40 hover:bg-red-800 text-red-300 border border-red-700 text-xs px-3 py-2 rounded-lg font-medium transition">
+                        <i class="fa-solid fa-trash mr-1"></i> Kosongkan
+                    </button>
+                    <button onclick="addCustomLoadModal()" class="bg-brand-600 hover:bg-brand-500 text-white text-xs px-3 py-2 rounded-lg font-medium transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah Beban
+                    </button>
+                    <button onclick="exportToPrint()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1">
+                        <i class="fa-solid fa-file-pdf"></i> Cetak BOM
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project Summary Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Table List (7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-4">
+                    <h3 class="text-sm font-semibold text-white uppercase tracking-wider border-b border-slate-700 pb-2 flex justify-between items-center">
+                        <span>Daftar Beban Terpasang & Komponen CHINT</span>
+                        <span id="project-total-item-badge" class="text-xs font-mono text-brand-400">0 Items</span>
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs font-mono">
+                            <thead class="bg-slate-900 text-slate-400 border-b border-slate-700">
+                                <tr>
+                                    <th class="p-2.5">Nama Beban</th>
+                                    <th class="p-2.5">Starter / Tipe</th>
+                                    <th class="p-2.5 text-right">Daya (kW)</th>
+                                    <th class="p-2.5 text-right">Arus (A)</th>
+                                    <th class="p-2.5 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="project-items-tbody" class="divide-y divide-slate-800">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-slate-500 font-sans italic">
+                                        Belum ada beban yang ditambahkan. Gunakan kalkulator Motor / Kabel untuk menambahkan beban ke rekap proyek.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Feeder & Transformer Sizing Result (5 Cols) -->
+                <div class="lg:col-span-5 bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl space-y-5">
+                    <h3 class="text-sm font-semibold text-amber-400 uppercase tracking-wider border-b border-slate-700 pb-2">
+                        <i class="fa-solid fa-bolt mr-2"></i> Hasil Sizing Induk Panel & Trafo
+                    </h3>
+
+                    <!-- Diversity Factor Slider -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-medium text-slate-300">Faktor Keserentakan (Diversity Factor)</label>
+                            <span id="diversity-val" class="text-xs font-mono text-brand-400 font-bold">0.80</span>
+                        </div>
+                        <input type="range" id="diversity-slider" min="0.5" max="1.0" step="0.05" value="0.80" oninput="updateProjectTotals()" class="w-full accent-brand-500">
+                        <p class="text-[10px] text-slate-500 mt-1">Estimasi tidak semua beban beroperasi bersamaan 100%.</p>
+                    </div>
+
+                    <!-- Calculated Totals Grid -->
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/60 flex justify-between items-center">
+                            <span class="text-slate-400">Total Daya Terpasang:</span>
+                            <span id="proj-total-kw" class="text-sm font-bold text-white">0.00 kW</span>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/60 flex justify-between items-center">
+                            <span class="text-slate-400">Daya Maksimum (Diversified):</span>
+                            <span id="proj-peak-kw" class="text-sm font-bold text-amber-400">0.00 kW</span>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/60 flex justify-between items-center">
+                            <span class="text-slate-400">Daya Semu Puncak ($S_{max}$):</span>
+                            <span id="proj-peak-kva" class="text-sm font-bold text-purple-400">0.00 kVA</span>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/60 flex justify-between items-center">
+                            <span class="text-slate-400">Estimasi Arus Induk Panel ($I_{main}$):</span>
+                            <span id="proj-main-current" class="text-sm font-bold text-emerald-400">0.00 Ampere</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="bg-slate-900/90 p-3.5 rounded-lg border border-chint-600/50">
+                            <span class="text-[11px] text-slate-400 font-semibold uppercase block mb-1">Rekomendasi Main Breaker CHINT</span>
+                            <div id="proj-main-breaker" class="text-base font-bold text-white font-mono">CHINT NXM-125S / 3P 100A</div>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-3.5 rounded-lg border border-slate-700">
+                            <span class="text-[11px] text-slate-400 font-semibold uppercase block mb-1">Rekomendasi Kapasitas Trafo / Genset</span>
+                            <div id="proj-trafo-rating" class="text-base font-bold text-amber-400 font-mono">Trafo 100 kVA (Load ~0%)</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 5: TABEL KHA PUIL & KATALOG REFERENSI -->
+        <section id="tab-kha-ref" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 flex justify-between items-center">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-table text-brand-400"></i>
+                        Tabel Referensi Kuat Hantar Arus (KHA) Kabel PUIL Standard (Mulai 0.5 mm²)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Kapasitas Hantar Arus (KHA) kontinu untuk konduktor tembaga (Cu) isolasi PVC & XLPE pada suhu ambien 30°C.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700/80 rounded-xl p-5 shadow-xl overflow-x-auto">
+                <table class="w-full text-left text-xs font-mono">
+                    <thead class="bg-slate-900 text-slate-300 border-b border-slate-700">
+                        <tr>
+                            <th class="p-3">Penampang (mm²)</th>
+                            <th class="p-3">KHA Dalam Pipa Conduit (A)</th>
+                            <th class="p-3">KHA Di Udara Terbuka (A)</th>
+                            <th class="p-3">KHA Tanam Tanah (A)</th>
+                            <th class="p-3">Resistansi R (Ω/km)</th>
+                            <th class="p-3">Aplikasi Khas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ref-kha-tbody" class="divide-y divide-slate-800 text-slate-300">
+                        <!-- Populated dynamically starting from 0.5 mm2 -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Print Laporan / Export BOM Template (Print Only) -->
+    <div id="print-area" class="print-only hidden p-8 bg-white text-black font-sans">
+        <div class="border-b-2 border-black pb-4 mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold uppercase tracking-tight text-blue-900">LAPORAN SIZING ELEKTRIKAL & BOM CHINT</h1>
+                <p class="text-sm text-gray-600">ElectroCalc PRO v3.0 - CHINT Standard & Cable Sizing Report</p>
+            </div>
+            <div class="text-right text-xs text-gray-500 font-mono">
+                <p>Tanggal: <span id="print-date">16/09/2026</span></p>
+                <p>Standar: PUIL / IEC 60947</p>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-base font-bold border-b border-gray-400 pb-1 mb-3 text-gray-800 uppercase">1. Rekapitulasi Komponen & Sizing Motor</h2>
+            <div id="print-motor-details" class="text-xs space-y-2">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-base font-bold border-b border-gray-400 pb-1 mb-3 text-gray-800 uppercase">2. Bill of Materials (BOM Detail CHINT Electric)</h2>
+            <table class="w-full text-left text-xs border border-gray-300">
+                <thead class="bg-gray-100 border-b border-gray-300">
+                    <tr>
+                        <th class="p-2 border-r">No</th>
+                        <th class="p-2 border-r">Deskripsi Komponen</th>
+                        <th class="p-2 border-r">Spesifikasi / Type CHINT</th>
+                        <th class="p-2 border-r">Qty</th>
+                        <th class="p-2">Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="print-bom-tbody">
+                    <!-- Populated via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-12 pt-4 border-t border-gray-300 flex justify-between text-center text-xs">
+            <div class="w-1/3">
+                <p class="mb-12">Dibuat Oleh,</p>
+                <p class="font-bold underline">( Electrical Engineer )</p>
+            </div>
+            <div class="w-1/3">
+                <p class="mb-12">Disetujui Oleh,</p>
+                <p class="font-bold underline">( Lead Engineer / Supervisor )</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        // Comprehensive Cable Data starting from 0.5 mm² up to 300 mm²
+        // Values based on PUIL 2011 / IEC Standards (Suhu ambien 30°C)
+        const CABLE_DATABASE = [
+            { size: 0.5, kha_conduit: 6, kha_air: 11, kha_ground: 13, res_cu: 39.0, res_al: 64.0 },
+            { size: 0.75, kha_conduit: 9, kha_air: 15, kha_ground: 18, res_cu: 26.0, res_al: 42.0 },
+            { size: 1.0, kha_conduit: 11, kha_air: 19, kha_ground: 22, res_cu: 19.5, res_al: 31.0 },
+            { size: 1.5, kha_conduit: 15.5, kha_air: 24, kha_ground: 29, res_cu: 12.1, res_al: 20.0 },
+            { size: 2.5, kha_conduit: 21, kha_air: 32, kha_ground: 38, res_cu: 7.41, res_al: 12.1 },
+            { size: 4.0, kha_conduit: 28, kha_air: 42, kha_ground: 50, res_cu: 4.61, res_al: 7.56 },
+            { size: 6.0, kha_conduit: 36, kha_air: 54, kha_ground: 63, res_cu: 3.08, res_al: 5.05 },
+            { size: 10.0, kha_conduit: 50, kha_air: 75, kha_ground: 86, res_cu: 1.83, res_al: 3.03 },
+            { size: 16.0, kha_conduit: 68, kha_air: 100, kha_ground: 115, res_cu: 1.15, res_al: 1.91 },
+            { size: 25.0, kha_conduit: 89, kha_air: 127, kha_ground: 149, res_cu: 0.727, res_al: 1.20 },
+            { size: 35.0, kha_conduit: 110, kha_air: 158, kha_ground: 180, res_cu: 0.524, res_al: 0.868 },
+            { size: 50.0, kha_conduit: 134, kha_air: 192, kha_ground: 215, res_cu: 0.387, res_al: 0.641 },
+            { size: 70.0, kha_conduit: 171, kha_air: 246, kha_ground: 268, res_cu: 0.268, res_al: 0.443 },
+            { size: 95.0, kha_conduit: 207, kha_air: 298, kha_ground: 322, res_cu: 0.193, res_al: 0.320 },
+            { size: 120.0, kha_conduit: 239, kha_air: 346, kha_ground: 369, res_cu: 0.153, res_al: 0.253 },
+            { size: 150.0, kha_conduit: 272, kha_air: 399, kha_ground: 418, res_cu: 0.124, res_al: 0.206 },
+            { size: 185.0, kha_conduit: 310, kha_air: 456, kha_ground: 472, res_cu: 0.0991, res_al: 0.164 },
+            { size: 240.0, kha_conduit: 364, kha_air: 538, kha_ground: 550, res_cu: 0.0754, res_al: 0.125 },
+            { size: 300.0, kha_conduit: 419, kha_air: 621, kha_ground: 626, res_cu: 0.0601, res_al: 0.100 }
+        ];
+
+        // Standard CHINT Breaker Ratings
+        const CHINT_MCB_AMP_RATINGS = [1, 2, 4, 6, 10, 16, 20, 25, 32, 40, 50, 63];
+        const CHINT_MCCB_AMP_RATINGS = [63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800];
+
+        // Standard CHINT Contactor AC-3 Ratings
+        const CHINT_CONTACTOR_MODELS = [
+            { amp: 6, model: 'CHINT NXC-06M' },
+            { amp: 9, model: 'CHINT NXC-09' },
+            { amp: 12, model: 'CHINT NXC-12' },
+            { amp: 18, model: 'CHINT NXC-18' },
+            { amp: 25, model: 'CHINT NXC-25' },
+            { amp: 32, model: 'CHINT NXC-32' },
+            { amp: 40, model: 'CHINT NXC-40' },
+            { amp: 50, model: 'CHINT NXC-50' },
+            { amp: 65, model: 'CHINT NXC-65' },
+            { amp: 80, model: 'CHINT NXC-80' },
+            { amp: 95, model: 'CHINT NXC-95' },
+            { amp: 120, model: 'CHINT NXC-120' },
+            { amp: 160, model: 'CHINT NXC-160' },
+            { amp: 225, model: 'CHINT NXC-225' },
+            { amp: 300, model: 'CHINT NXC-300' },
+            { amp: 400, model: 'CHINT NXC-400' },
+            { amp: 630, model: 'CHINT NXC-630' }
+        ];
+
+        // Standard CHINT Thermal Overload Relay Range
+        const CHINT_TOR_MODELS = [
+            { min: 0.1, max: 0.16, model: 'CHINT NXR-25 (0.1 - 0.16A)' },
+            { min: 0.16, max: 0.25, model: 'CHINT NXR-25 (0.16 - 0.25A)' },
+            { min: 0.25, max: 0.4, model: 'CHINT NXR-25 (0.25 - 0.4A)' },
+            { min: 0.4, max: 0.63, model: 'CHINT NXR-25 (0.4 - 0.63A)' },
+            { min: 0.63, max: 1.0, model: 'CHINT NXR-25 (0.63 - 1.0A)' },
+            { min: 1.0, max: 1.6, model: 'CHINT NXR-25 (1.0 - 1.6A)' },
+            { min: 1.6, max: 2.5, model: 'CHINT NXR-25 (1.6 - 2.5A)' },
+            { min: 2.5, max: 4.0, model: 'CHINT NXR-25 (2.5 - 4.0A)' },
+            { min: 4.0, max: 6.0, model: 'CHINT NXR-25 (4.0 - 6.0A)' },
+            { min: 5.5, max: 8.0, model: 'CHINT NXR-25 (5.5 - 8.0A)' },
+            { min: 7.0, max: 10.0, model: 'CHINT NXR-25 (7.0 - 10.0A)' },
+            { min: 9.0, max: 13.0, model: 'CHINT NXR-25 (9.0 - 13.0A)' },
+            { min: 12.0, max: 18.0, model: 'CHINT NXR-25 (12 - 18A)' },
+            { min: 17.0, max: 25.0, model: 'CHINT NXR-25 (17 - 25A)' },
+            { min: 23.0, max: 32.0, model: 'CHINT NXR-38 (23 - 32A)' },
+            { min: 30.0, max: 40.0, model: 'CHINT NXR-38 (30 - 40A)' },
+            { min: 37.0, max: 50.0, model: 'CHINT NXR-100 (37 - 50A)' },
+            { min: 48.0, max: 65.0, model: 'CHINT NXR-100 (48 - 65A)' },
+            { min: 63.0, max: 80.0, model: 'CHINT NXR-100 (63 - 80A)' },
+            { min: 80.0, max: 104.0, model: 'CHINT NXR-100 (80 - 104A)' },
+            { min: 110.0, max: 160.0, model: 'CHINT NXR-200 (110 - 160A)' },
+            { min: 160.0, max: 200.0, model: 'CHINT NXR-200 (160 - 200A)' },
+            { min: 200.0, max: 315.0, model: 'CHINT NXR-630 (200 - 315A)' },
+            { min: 315.0, max: 500.0, model: 'CHINT NXR-630 (315 - 500A)' }
+        ];
+
+        // Global State for Project Items
+        let projectItems = [];
+        let cableInputMode = 'power';
+
+        window.onload = function() {
+            populateKhaTable();
+            calculateMotor();
+            calculateCableTab();
+            calculateCapacitor();
+        };
+
+        // Navigation Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'text-brand-400', 'border-brand-500', 'border-b-2');
+                el.classList.add('text-slate-400');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const btn = document.getElementById('btn-' + tabId);
+            btn.classList.add('active', 'text-brand-400', 'border-brand-500', 'border-b-2');
+            btn.classList.remove('text-slate-400');
+        }
+
+        function calculateMotor() {
+            let power = parseFloat(document.getElementById('motor-power').value) || 0;
+            const unit = document.getElementById('motor-power-unit').value;
+            const phase = parseInt(document.getElementById('motor-phase').value);
+            const voltage = parseFloat(document.getElementById('motor-voltage').value);
+            const starter = document.getElementById('motor-starter').value;
+            const cosphi = parseFloat(document.getElementById('motor-cosphi').value) || 0.85;
+            const eff = (parseFloat(document.getElementById('motor-eff').value) || 88) / 100;
+            const length = parseFloat(document.getElementById('motor-cable-len').value) || 35;
+            const maxDrop = parseFloat(document.getElementById('motor-max-drop').value) || 3.0;
+            const conductor = document.getElementById('motor-conductor').value;
+            const installMethod = document.getElementById('motor-install-method').value;
+            const controlCableSize = document.getElementById('motor-control-cable-size').value;
+
+            if (unit === 'HP') {
+                power = power * 0.7457; // HP to kW
+            }
+
+            const powerWatts = power * 1000;
+            let flc = 0; // Full Load Current
+
+            if (phase === 3) {
+                flc = powerWatts / (Math.sqrt(3) * voltage * cosphi * eff);
+            } else {
+                flc = powerWatts / (voltage * cosphi * eff);
+            }
+
+            let startMultiplier = 6.0;
+            if (starter === 'STAR_DELTA') startMultiplier = 2.2;
+            else if (starter === 'SOFT_STARTER') startMultiplier = 3.0;
+            else if (starter === 'VFD') startMultiplier = 1.2;
+
+            const startCurrent = flc * startMultiplier;
+            const kva = (phase === 3 ? Math.sqrt(3) * voltage * flc : voltage * flc) / 1000;
+            const minKha = flc * 1.25;
+
+            // UI Summary Badges
+            document.getElementById('res-motor-flc').textContent = flc.toFixed(2) + ' A';
+            document.getElementById('res-motor-istart').textContent = startCurrent.toFixed(2) + ' A';
+            document.getElementById('res-motor-istart-factor').textContent = `~${startMultiplier}x In (${starter})`;
+            document.getElementById('res-motor-kva').textContent = kva.toFixed(2) + ' kVA';
+            document.getElementById('res-motor-kha').textContent = minKha.toFixed(2) + ' A';
+
+            // CHINT Breaker Selection (MCB or MCCB)
+            let chintBreakerText = '';
+            let breakerAmp = 0;
+            const mcbMultiplier = (starter === 'DOL') ? 2.0 : 1.5;
+            const targetBreakerVal = flc * mcbMultiplier;
+
+            if (flc <= 50) {
+                // Select MCB CHINT NXB-63
+                breakerAmp = CHINT_MCB_AMP_RATINGS.find(a => a >= targetBreakerVal) || 63;
+                chintBreakerText = `CHINT NXB-63 ${phase}P C${breakerAmp}A (MCB)`;
+            } else {
+                // Select MCCB CHINT NXM
+                breakerAmp = CHINT_MCCB_AMP_RATINGS.find(a => a >= targetBreakerVal) || 630;
+                chintBreakerText = `CHINT NXM-125S / ${phase}P ${breakerAmp}A (MCCB)`;
+            }
+            document.getElementById('res-mcb-rating').textContent = chintBreakerText;
+
+            // CHINT Contactor Selection (NXC Series)
+            let mainContactorAmp = flc;
+            if (starter === 'STAR_DELTA') {
+                mainContactorAmp = flc / Math.sqrt(3); // Main & Delta contactors carry In / sqrt(3)
+            }
+            const contactorObj = CHINT_CONTACTOR_MODELS.find(c => c.amp >= mainContactorAmp) || CHINT_CONTACTOR_MODELS[CHINT_CONTACTOR_MODELS.length - 1];
+            
+            let contactorText = contactorObj.model;
+            if (starter === 'STAR_DELTA') {
+                const starContactorObj = CHINT_CONTACTOR_MODELS.find(c => c.amp >= (flc / 3)) || CHINT_CONTACTOR_MODELS[0];
+                contactorText = `3x ${contactorObj.model} (Utama/Delta) + ${starContactorObj.model} (Star)`;
+            } else if (starter === 'SOFT_STARTER') {
+                contactorText = `Soft Starter CHINT NJR2-${Math.round(power)}kW + Bypass Contactor ${contactorObj.model}`;
+            } else if (starter === 'VFD') {
+                contactorText = `Inverter CHINT NVF2G-${Math.round(power)}kW / ${contactorObj.model}`;
+            }
+            document.getElementById('res-contactor-rating').textContent = contactorText;
+
+            // CHINT Thermal Overload Relay Selection (NXR Series)
+            let torSettingAmp = flc;
+            if (starter === 'STAR_DELTA') {
+                torSettingAmp = flc / Math.sqrt(3); // TOR positioned in phase branch
+            }
+            const torObj = CHINT_TOR_MODELS.find(t => t.max >= torSettingAmp) || CHINT_TOR_MODELS[CHINT_TOR_MODELS.length - 1];
+            document.getElementById('res-tor-range').textContent = `${torObj.model} (Set Dial: ${torSettingAmp.toFixed(1)}A)`;
+
+            // Cable Sizing (Power Cable) starting from 0.5 mm²
+            const selectedCable = selectCableSize(minKha, installMethod, conductor);
+            const cores = phase === 3 ? 4 : 3;
+            document.getElementById('res-cable-size').textContent = `NYY ${cores} x ${selectedCable.size} mm² (${conductor}/PVC)`;
+            document.getElementById('res-cable-note').textContent = `KHA Kabel (${selectedCable.kha}A) > Min. KHA (${minKha.toFixed(1)}A). Grounding Min: ${Math.max(1.5, selectedCable.size / 2)} mm²`;
+
+            // Voltage Drop Verification
+            const resPerKm = conductor === 'Cu' ? selectedCable.res_cu : selectedCable.res_al;
+            const rTotal = (resPerKm * (length / 1000));
+            let vDrop = 0;
+
+            if (phase === 3) {
+                vDrop = Math.sqrt(3) * flc * rTotal * cosphi;
+            } else {
+                vDrop = 2 * flc * rTotal * cosphi;
+            }
+
+            const vDropPercent = (vDrop / voltage) * 100;
+            document.getElementById('res-vdrop-volt').textContent = vDrop.toFixed(2) + ' Volt';
+            
+            const dropEl = document.getElementById('res-vdrop-percent');
+            dropEl.textContent = `${vDropPercent.toFixed(2)}% ${vDropPercent <= maxDrop ? '✔ (Aman)' : '❌ (Terlalu Tinggi)'}`;
+            dropEl.className = `font-mono font-bold text-sm ${vDropPercent <= maxDrop ? 'text-emerald-400' : 'text-red-400'}`;
+
+            // Conduit Size Estimate
+            let conduitSize = "20 mm (3/4\")";
+            if (selectedCable.size >= 10) conduitSize = "25 mm (1\")";
+            if (selectedCable.size >= 25) conduitSize = "32 mm (1-1/4\")";
+            if (selectedCable.size >= 50) conduitSize = "50 mm (2\")";
+            document.getElementById('res-conduit-size').textContent = `Pipa Conduit ${conduitSize}`;
+
+            // Supporting Control Components Grid (CHINT)
+            populateSupportingComponents(starter, phase, controlCableSize, breakerAmp, contactorObj.model);
+
+            // Wiring Schematic Flow
+            updateWiringDiagram(starter, phase);
+
+            // Master katalog CHINT: rekomendasi berbasis hasil kalkulator motor
+            updateChintMaster({ flc, phase, voltage, starter, power, breakerAmp, contactorObj, torObj });
+        }
+
+        function populateSupportingComponents(starter, phase, controlCableSize, mainBreakerAmp, contactorModel) {
+            const grid = document.getElementById('supporting-components-grid');
+            
+            const list = [
+                { title: 'MCB Kontrol / Proteksi Sinyal', spec: 'CHINT NXB-63 1P C2A / C6A' },
+                { title: 'Phase Failure Relay (Proteksi Phase)', spec: phase === 3 ? 'CHINT XJ3-G (Phase Sequence & Failure)' : 'N/A (Sistem 1 Fasa)' },
+                { title: 'Auxiliary Relay / Interlock', spec: 'CHINT JZX-22F / 230VAC (8-Pin / 14-Pin)' },
+                { title: 'Kabel Rangkaian Kontrol', spec: `NYAF ${controlCableSize} mm² Tembaga Serabut` },
+                { title: 'Push Button START / STOP', spec: 'CHINT NP2-EA31 (Hijau Start) + NP2-EA42 (Merah Stop)' },
+                { title: 'Pilot Lamp Indikator', spec: 'CHINT ND16 (Hijau: RUN, Merah: STOP, Kuning: TRIP)' },
+                { title: 'Terminal Block & Rel Panel', spec: 'CHINT JXB Terminal + Din-Rail 35mm Aluminium' },
+                { title: 'Kanal Kabel & Aksesoris', spec: 'Cable Duct Wiring Slot 30x40 + Gland Kabel' }
+            ];
+
+            if (starter === 'STAR_DELTA') {
+                list.push({ title: 'Timer Star-Delta (Delay Y-Δ)', spec: 'CHINT JSZ3-Y Timer Star-Delta (0.1-30s)' });
+            }
+
+            grid.innerHTML = list.map(item => `
+                <div class="bg-slate-900/90 p-2.5 rounded border border-slate-700/70">
+                    <span class="text-slate-400 text-[10px] block font-sans">${item.title}</span>
+                    <span class="text-white font-bold text-[11px]">${item.spec}</span>
+                </div>
+            `).join('');
+        }
+
+        // Select suitable cable size
+        function selectCableSize(requiredKha, installMethod, conductor) {
+            for (let c of CABLE_DATABASE) {
+                let khaCap = c.kha_conduit;
+                if (installMethod === 'open_air') khaCap = c.kha_air;
+                if (installMethod === 'underground') khaCap = c.kha_ground;
+
+                if (conductor === 'Al' && c.size < 10) continue; // Aluminium min 10mm²
+
+                if (khaCap >= requiredKha) {
+                    return { size: c.size, kha: khaCap, res_cu: c.res_cu, res_al: c.res_al };
+                }
+            }
+            const last = CABLE_DATABASE[CABLE_DATABASE.length - 1];
+            return { size: last.size, kha: last.kha_conduit, res_cu: last.res_cu, res_al: last.res_al };
+        }
+
+        // Diagram Visual Wiring - SVG schematic (dynamic per starter)
+        function updateWiringDiagram(starter, phase) {
+            const titleEl = document.getElementById('diagram-starter-title');
+            const contentEl = document.getElementById('diagram-content');
+            if (!titleEl || !contentEl) return;
+
+            const phaseCount = parseInt(phase) || 3;
+            titleEl.textContent = starter === 'STAR_DELTA' ? 'STAR-DELTA (Y-Δ)' : starter.replace('_', ' ');
+
+            const box = (x, y, w, h, label, sub='', cls='') => `
+                <g class="${cls}">
+                    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+                    <text x="${x+w/2}" y="${y+22}" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="700">${label}</text>
+                    ${sub ? `<text x="${x+w/2}" y="${y+39}" text-anchor="middle" fill="#94a3b8" font-size="8">${sub}</text>` : ''}
+                </g>`;
+            const line = (x1,y1,x2,y2, label='', dashed=false) => `
+                <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="2" ${dashed?'stroke-dasharray="5 4"':''}/>
+                ${label ? `<text x="${(x1+x2)/2}" y="${(y1+y2)/2-5}" text-anchor="middle" fill="#cbd5e1" font-size="9">${label}</text>` : ''}`;
+
+            let svg = '';
+            if (starter === 'DOL') {
+                const ys = phaseCount === 1 ? [90] : [65,100,135];
+                const labels = phaseCount === 1 ? ['L'] : ['L1','L2','L3'];
+                svg = `<svg viewBox="0 0 760 200" class="w-full min-w-[700px] h-auto" role="img" aria-label="Schematic DOL">
+                    <text x="20" y="25" fill="#38bdf8" font-size="12" font-weight="700">POWER CIRCUIT — DOL</text>
+                    ${ys.map((y,i)=>line(45,y,105,y,labels[i])).join('')}
+                    ${box(105,48,105,104,'MCCB/MCB','Protection')}
+                    ${ys.map((y,i)=>line(210,y,275,y)).join('')}
+                    ${box(275,48,115,104,'CONTACTOR','CHINT NXC')}
+                    ${ys.map((y,i)=>line(390,y,455,y)).join('')}
+                    ${box(455,48,100,104,'TOR','CHINT NXR')}
+                    ${ys.map((y,i)=>line(555,y,650,y,'')).join('')}
+                    ${box(650,48,90,104,'MOTOR','M 3~')}
+                    ${phaseCount !== 1 ? line(45,170,740,170,'PE',true) : ''}
+                    <text x="20" y="190" fill="#64748b" font-size="9">Alur daya: sumber → proteksi → kontaktor → overload → motor</text>
+                </svg>`;
+            } else if (starter === 'STAR_DELTA') {
+                svg = `<svg viewBox="0 0 900 330" class="w-full min-w-[850px] h-auto" role="img" aria-label="Schematic Star Delta">
+                    <text x="20" y="25" fill="#38bdf8" font-size="12" font-weight="700">POWER CIRCUIT — STAR / DELTA</text>
+                    ${['L1','L2','L3'].map((p,i)=>line(45,70+i*28,110,70+i*28,p)).join('')}
+                    ${box(110,55,100,105,'MCCB','Protection')}
+                    ${['L1','L2','L3'].map((p,i)=>line(210,70+i*28,270,70+i*28)).join('')}
+                    ${box(270,55,105,105,'KM1','MAIN')}
+                    ${['L1','L2','L3'].map((p,i)=>line(375,70+i*28,440,70+i*28)).join('')}
+                    ${box(440,55,100,105,'TOR','NXR')}
+                    ${['U1','V1','W1'].map((p,i)=>line(540,70+i*28,620,70+i*28,p)).join('')}
+                    ${box(620,55,105,105,'MOTOR','6 TERMINALS')}
+                    ${line(725,70,825,70,'U1')}${line(725,98,825,98,'V1')}${line(725,126,825,126,'W1')}
+                    ${box(690,205,90,50,'KM2','STAR')}
+                    ${box(800,205,90,50,'KM3','DELTA')}
+                    ${line(735,160,735,205)}${line(845,160,845,205)}
+                    <text x="20" y="290" fill="#94a3b8" font-size="9">KM1 = main, KM2 = star, KM3 = delta. Timer mengatur perpindahan Y → Δ.</text>
+                    <text x="20" y="308" fill="#fbbf24" font-size="9">Catatan: motor harus memiliki 6 terminal dan nameplate sesuai untuk hubungan Y-Δ pada tegangan jaringan.</text>
+                </svg>`;
+            } else if (starter === 'SOFT_STARTER') {
+                svg = `<svg viewBox="0 0 820 220" class="w-full min-w-[760px] h-auto" role="img" aria-label="Schematic Soft Starter">
+                    <text x="20" y="25" fill="#38bdf8" font-size="12" font-weight="700">POWER CIRCUIT — SOFT STARTER + BYPASS</text>
+                    ${['L1','L2','L3'].map((p,i)=>line(45,70+i*30,110,70+i*30,p)).join('')}
+                    ${box(110,55,100,110,'MCCB','Protection')}
+                    ${['L1','L2','L3'].map((p,i)=>line(210,70+i*30,285,70+i*30)).join('')}
+                    ${box(285,55,125,110,'SOFT STARTER','CHINT NJR2')}
+                    ${['L1','L2','L3'].map((p,i)=>line(410,70+i*30,490,70+i*30)).join('')}
+                    ${box(490,55,110,110,'BYPASS KM','Contactor')}
+                    ${['L1','L2','L3'].map((p,i)=>line(600,70+i*30,690,70+i*30)).join('')}
+                    ${box(690,55,90,110,'MOTOR','3~')}
+                    <text x="25" y="195" fill="#94a3b8" font-size="9">Soft starter membatasi arus start; bypass menutup setelah motor mencapai kondisi running.</text>
+                </svg>`;
+            } else if (starter === 'VFD') {
+                svg = `<svg viewBox="0 0 850 250" class="w-full min-w-[780px] h-auto" role="img" aria-label="Schematic VFD">
+                    <text x="20" y="25" fill="#38bdf8" font-size="12" font-weight="700">POWER CIRCUIT — VFD / INVERTER</text>
+                    ${['L1','L2','L3'].map((p,i)=>line(45,70+i*30,115,70+i*30,p)).join('')}
+                    ${box(115,55,100,110,'MCCB','Protection')}
+                    ${['L1','L2','L3'].map((p,i)=>line(215,70+i*30,285,70+i*30)).join('')}
+                    ${box(285,55,120,110,'EMC FILTER','Optional')}
+                    ${['R/L1','S/L2','T/L3'].map((p,i)=>line(405,70+i*30,475,70+i*30,p)).join('')}
+                    ${box(475,45,145,130,'VFD','CHINT NVF2G / NVF300')}
+                    ${['U','V','W'].map((p,i)=>line(620,70+i*30,700,70+i*30,p)).join('')}
+                    ${box(700,55,100,110,'MOTOR','3~')}
+                    ${line(535,175,535,215,'PE',true)}
+                    <text x="20" y="205" fill="#94a3b8" font-size="9">Jangan memasang kontaktor switching pada output VFD saat VFD sedang running.</text>
+                    <text x="20" y="223" fill="#94a3b8" font-size="9">Terminal kontrol RUN/STOP, speed reference, dan interlock disesuaikan parameter inverter.</text>
+                </svg>`;
+            }
+
+            contentEl.innerHTML = `<div class="w-full overflow-x-auto rounded-lg border border-slate-800 bg-slate-950/80 p-2">${svg}</div>`;
+        }
+
+        function setCableInputMode(mode) {
+            cableInputMode = mode;
+            if (mode === 'power') {
+                document.getElementById('cable-power-container').classList.remove('hidden');
+                document.getElementById('cable-current-container').classList.add('hidden');
+                document.getElementById('btn-cable-mode-power').className = 'px-3 py-2 text-xs rounded-lg font-medium bg-brand-600 text-white border border-brand-500';
+                document.getElementById('btn-cable-mode-current').className = 'px-3 py-2 text-xs rounded-lg font-medium bg-slate-700 text-slate-300 border border-slate-600';
+            } else {
+                document.getElementById('cable-power-container').classList.add('hidden');
+                document.getElementById('cable-current-container').classList.remove('hidden');
+                document.getElementById('btn-cable-mode-current').className = 'px-3 py-2 text-xs rounded-lg font-medium bg-brand-600 text-white border border-brand-500';
+                document.getElementById('btn-cable-mode-power').className = 'px-3 py-2 text-xs rounded-lg font-medium bg-slate-700 text-slate-300 border border-slate-600';
+            }
+            calculateCableTab();
+        }
+
+        function calculateCableTab() {
+            const phase = parseInt(document.getElementById('cable-phase').value);
+            const voltage = parseFloat(document.getElementById('cable-voltage').value) || 380;
+            const cosphi = parseFloat(document.getElementById('cable-cosphi').value) || 0.85;
+            const length = parseFloat(document.getElementById('cable-length').value) || 40;
+            const material = document.getElementById('cable-material').value;
+            const maxVdropVal = parseFloat(document.getElementById('cable-max-vdrop-val').value) || 3.0;
+
+            let current = 0;
+            if (cableInputMode === 'power') {
+                let pVal = parseFloat(document.getElementById('cable-power-val').value) || 0;
+                const pUnit = document.getElementById('cable-power-unit').value;
+                if (pUnit === 'W') pVal = pVal / 1000;
+
+                if (pUnit === 'kVA') {
+                    current = (phase === 3) ? (pVal * 1000) / (Math.sqrt(3) * voltage) : (pVal * 1000) / voltage;
+                } else {
+                    current = (phase === 3) ? (pVal * 1000) / (Math.sqrt(3) * voltage * cosphi) : (pVal * 1000) / (voltage * cosphi);
+                }
+            } else {
+                current = parseFloat(document.getElementById('cable-current-val').value) || 0;
+            }
+
+            document.getElementById('cres-current').textContent = current.toFixed(2) + ' A';
+
+            // Select Cable Starting from 0.5 mm²
+            const selected = selectCableSize(current * 1.15, 'conduit', material);
+            const cores = phase === 3 ? 4 : 3;
+            document.getElementById('cres-size').textContent = `${selected.size} mm²`;
+            document.getElementById('cres-type-name').textContent = `NYY ${cores} x ${selected.size} mm² (KHA ${selected.kha}A)`;
+
+            // Breaker Recommendation CHINT
+            const targetBreaker = current * 1.15;
+            const recBreaker = CHINT_MCB_AMP_RATINGS.find(a => a >= targetBreaker) || 63;
+            document.getElementById('cres-mcb').textContent = `CHINT NXB-63 ${phase}P C${recBreaker}A`;
+
+            // Loss & Vdrop
+            const resPerKm = material === 'Cu' ? selected.res_cu : selected.res_al;
+            const rTotal = (resPerKm * (length / 1000));
+            const vDrop = (phase === 3) ? Math.sqrt(3) * current * rTotal * cosphi : 2 * current * rTotal * cosphi;
+            const vDropPercent = (vDrop / voltage) * 100;
+            const pLoss = (phase === 3) ? 3 * Math.pow(current, 2) * rTotal : 2 * Math.pow(current, 2) * rTotal;
+
+            document.getElementById('cres-vdrop').textContent = `${vDrop.toFixed(2)} V (${vDropPercent.toFixed(2)}%)`;
+            document.getElementById('cres-ploss').textContent = `${pLoss.toFixed(1)} Watt`;
+            document.getElementById('cres-resistance').textContent = `${rTotal.toFixed(3)} Ω`;
+            document.getElementById('cres-vload').textContent = `${(voltage - vDrop).toFixed(2)} Volt`;
+
+            // Populate Cable Size Matrix Starting from 0.5 mm²
+            const tbody = document.getElementById('cable-options-tbody');
+            tbody.innerHTML = '';
+
+            CABLE_DATABASE.filter(c => c.size >= 0.5 && c.size <= 50).slice(0, 7).forEach(c => {
+                const r = (material === 'Cu' ? c.res_cu : c.res_al) * (length / 1000);
+                const vd = (phase === 3) ? Math.sqrt(3) * current * r * cosphi : 2 * current * r * cosphi;
+                const vdp = (vd / voltage) * 100;
+                const pl = (phase === 3) ? 3 * Math.pow(current, 2) * r : 2 * Math.pow(current, 2) * r;
+                const pass = (c.kha_conduit >= current) && (vdp <= maxVdropVal);
+
+                tbody.innerHTML += `
+                    <tr class="${c.size === selected.size ? 'bg-brand-900/40 text-brand-300 font-bold' : ''}">
+                        <td class="p-2">${c.size} mm²</td>
+                        <td class="p-2">${c.kha_conduit} A</td>
+                        <td class="p-2">${vdp.toFixed(2)}%</td>
+                        <td class="p-2">${pl.toFixed(1)} W</td>
+                        <td class="p-2">${pass ? '<span class="text-emerald-400">✔ Sesuai</span>' : '<span class="text-red-400">❌ Kurang</span>'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function calculateCapacitor() {
+            const kw = parseFloat(document.getElementById('cap-power-kw').value) || 0;
+            const cos1 = parseFloat(document.getElementById('cap-cosphi1').value) || 0.7;
+            const cos2 = parseFloat(document.getElementById('cap-cosphi2').value) || 0.95;
+            const volt = parseFloat(document.getElementById('cap-voltage').value) || 380;
+            const freq = parseFloat(document.getElementById('cap-freq').value) || 50;
+
+            const tan1 = Math.tan(Math.acos(cos1));
+            const tan2 = Math.tan(Math.acos(cos2));
+
+            const qKvar = kw * (tan1 - tan2);
+
+            const i1 = (kw * 1000) / (Math.sqrt(3) * volt * cos1);
+            const i2 = (kw * 1000) / (Math.sqrt(3) * volt * cos2);
+            const iDrop = i1 - i2;
+
+            // Capacitance in microfarads for delta connection
+            // Q = 3 * V_line^2 * omega * C
+            const omega = 2 * Math.PI * freq;
+            const cFarad = (qKvar * 1000) / (3 * Math.pow(volt, 2) * omega);
+            const uFarad = cFarad * 1e6;
+
+            document.getElementById('capres-q-kvar').textContent = qKvar.toFixed(1) + ' kVAR';
+            document.getElementById('capres-current-drop').textContent = iDrop.toFixed(1) + ' Ampere';
+            document.getElementById('capres-current-percent').textContent = `Turun ~${((iDrop / i1) * 100).toFixed(1)}% Arus Utama`;
+            document.getElementById('capres-microfarad').textContent = uFarad.toFixed(1) + ' µF / Ph';
+
+            document.getElementById('capres-cos1-val').textContent = cos1;
+            document.getElementById('capres-s1').textContent = (kw / cos1).toFixed(2) + ' kVA';
+            document.getElementById('capres-i1').textContent = i1.toFixed(1) + ' A';
+
+            document.getElementById('capres-cos2-val').textContent = cos2;
+            document.getElementById('capres-s2').textContent = (kw / cos2).toFixed(2) + ' kVA';
+            document.getElementById('capres-i2').textContent = i2.toFixed(1) + ' A';
+
+            // CHINT Switching Components Recommendation
+            document.getElementById('capres-chint-contactor').textContent = `CHINT CJ19-${Math.round(qKvar / 3)} Special Capacitor Contactor`;
+            document.getElementById('capres-chint-controller').textContent = `CHINT NCF6 Automatic Power Factor Controller`;
+        }
+
+        function addMotorToProject() {
+            let power = parseFloat(document.getElementById('motor-power').value) || 0;
+            const unit = document.getElementById('motor-power-unit').value;
+            if (unit === 'HP') power = power * 0.7457;
+
+            const flcText = document.getElementById('res-motor-flc').textContent;
+            const flcVal = parseFloat(flcText);
+            const starter = document.getElementById('motor-starter').value;
+            const mcbText = document.getElementById('res-mcb-rating').textContent;
+
+            projectItems.push({
+                name: `Motor Induksi ${power.toFixed(1)}kW (${unit})`,
+                starter: starter,
+                powerKw: power,
+                current: flcVal,
+                chintBreaker: mcbText
+            });
+
+            updateProjectTotals();
+            switchTab('tab-project');
+        }
+
+        function addGeneralLoadToProject() {
+            const currentText = document.getElementById('cres-current').textContent;
+            const currentVal = parseFloat(currentText);
+            const pVal = parseFloat(document.getElementById('cable-power-val').value) || 10;
+
+            projectItems.push({
+                name: `Beban Umum / Distribution Feeder`,
+                starter: 'Feeder Direct',
+                powerKw: pVal,
+                current: currentVal,
+                chintBreaker: document.getElementById('cres-mcb').textContent
+            });
+
+            updateProjectTotals();
+            switchTab('tab-project');
+        }
+
+        function addCustomLoadModal() {
+            const name = prompt("Masukkan Nama Beban / Equipment:", "Beban Panel Aux");
+            if (!name) return;
+            const kw = parseFloat(prompt("Masukkan Daya Beban (kW):", "5.5")) || 0;
+            const amp = (kw * 1000) / (Math.sqrt(3) * 380 * 0.85);
+
+            projectItems.push({
+                name: name,
+                starter: 'Manual Input',
+                powerKw: kw,
+                current: amp,
+                chintBreaker: `CHINT NXB-63 C${Math.ceil(amp * 1.25)}A`
+            });
+
+            updateProjectTotals();
+        }
+
+        function clearProjectList() {
+            if (confirm("Kosongkan semua daftar beban proyek?")) {
+                projectItems = [];
+                updateProjectTotals();
+            }
+        }
+
+        function removeProjectItem(index) {
+            projectItems.splice(index, 1);
+            updateProjectTotals();
+        }
+
+        function updateProjectTotals() {
+            const tbody = document.getElementById('project-items-tbody');
+            const badge = document.getElementById('project-count-badge');
+            const itemBadge = document.getElementById('project-total-item-badge');
+
+            if (projectItems.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500 font-sans italic">
+                            Belum ada beban yang ditambahkan. Gunakan kalkulator Motor / Kabel untuk menambahkan beban ke rekap proyek.
+                        </td>
+                    </tr>
+                `;
+                badge.classList.add('hidden');
+                itemBadge.textContent = '0 Items';
+            } else {
+                badge.classList.remove('hidden');
+                badge.textContent = projectItems.length;
+                itemBadge.textContent = `${projectItems.length} Items`;
+
+                tbody.innerHTML = projectItems.map((item, idx) => `
+                    <tr>
+                        <td class="p-2.5 font-bold text-white">${item.name}</td>
+                        <td class="p-2.5 text-slate-400">${item.starter}</td>
+                        <td class="p-2.5 text-right font-mono">${item.powerKw.toFixed(2)} kW</td>
+                        <td class="p-2.5 text-right font-mono text-brand-300">${item.current.toFixed(1)} A</td>
+                        <td class="p-2.5 text-center">
+                            <button onclick="removeProjectItem(${idx})" class="text-red-400 hover:text-red-300 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Calculate Totals
+            const diversity = parseFloat(document.getElementById('diversity-slider').value) || 0.8;
+            document.getElementById('diversity-val').textContent = diversity.toFixed(2);
+
+            const totalKw = projectItems.reduce((acc, item) => acc + item.powerKw, 0);
+            const peakKw = totalKw * diversity;
+            const peakKva = peakKw / 0.85; // Cos phi 0.85
+            const mainCurrent = (peakKw * 1000) / (Math.sqrt(3) * 380 * 0.85);
+
+            document.getElementById('proj-total-kw').textContent = totalKw.toFixed(2) + ' kW';
+            document.getElementById('proj-peak-kw').textContent = peakKw.toFixed(2) + ' kW';
+            document.getElementById('proj-peak-kva').textContent = peakKva.toFixed(2) + ' kVA';
+            document.getElementById('proj-main-current').textContent = mainCurrent.toFixed(1) + ' Ampere';
+
+            // CHINT Main Breaker Recommendation
+            const mainBreakerRating = CHINT_MCCB_AMP_RATINGS.find(a => a >= mainCurrent * 1.25) || 800;
+            document.getElementById('proj-main-breaker').textContent = `CHINT NXM-${mainBreakerRating >= 250 ? '400S' : '125S'} / 3P ${mainBreakerRating}A (Main MCCB)`;
+
+            // Trafo Recommendation
+            const trafoStandardKva = [25, 50, 100, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500];
+            const recTrafo = trafoStandardKva.find(t => t >= peakKva * 1.2) || 2500;
+            const loadFactor = ((peakKva / recTrafo) * 100).toFixed(1);
+            document.getElementById('proj-trafo-rating').textContent = `Trafo ${recTrafo} kVA (Beban Puncak ~${loadFactor}%)`;
+        }
+
+        function populateKhaTable() {
+            const tbody = document.getElementById('ref-kha-tbody');
+            tbody.innerHTML = CABLE_DATABASE.map(c => `
+                <tr class="hover:bg-slate-700/50 transition">
+                    <td class="p-3 font-bold text-white">${c.size} mm²</td>
+                    <td class="p-3 text-amber-300">${c.kha_conduit} A</td>
+                    <td class="p-3 text-emerald-300">${c.kha_air} A</td>
+                    <td class="p-3 text-purple-300">${c.kha_ground} A</td>
+                    <td class="p-3 text-slate-400">${c.res_cu} Ω/km</td>
+                    <td class="p-3 text-slate-400 font-sans text-[11px]">${getApplicableText(c.size)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function getApplicableText(size) {
+            if (size <= 0.75) return "Kontrol, Sensor, Sinyal PLC, Indicator Lamp";
+            if (size <= 1.5) return "Kabel Kontrol Panel, Penerangan Lampu LED";
+            if (size <= 2.5) return "Stop Kontak 16A, Motor Kecil (<2.2kW)";
+            if (size <= 6) return "Feeder Sub-Panel, Motor (3kW - 11kW)";
+            if (size <= 25) return "Feeder Utama Industri, Motor (15kW - 45kW)";
+            return "Kabel Utama Trafo / Main Distribution Panel";
+        }
+
+        function exportToPrint() {
+            const printDate = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('print-date').textContent = printDate;
+
+            // Motor Details
+            const power = document.getElementById('motor-power').value;
+            const unit = document.getElementById('motor-power-unit').value;
+            const flc = document.getElementById('res-motor-flc').textContent;
+            const starter = document.getElementById('motor-starter').value;
+
+            document.getElementById('print-motor-details').innerHTML = `
+                <p><strong>Beban Motor Utama:</strong> ${power} ${unit} | <strong>Arus Nominal (In):</strong> ${flc} | <strong>Metode Starter:</strong> ${starter}</p>
+                <p><strong>Breaker Proteksi:</strong> ${document.getElementById('res-mcb-rating').textContent}</p>
+                <p><strong>Kontaktor Utama:</strong> ${document.getElementById('res-contactor-rating').textContent}</p>
+                <p><strong>Thermal Overload Relay:</strong> ${document.getElementById('res-tor-range').textContent}</p>
+                <p><strong>Kabel Utama Daya:</strong> ${document.getElementById('res-cable-size').textContent}</p>
+            `;
+
+            // BOM Table
+            const bomTbody = document.getElementById('print-bom-tbody');
+            const bomList = [
+                { desc: 'Main / Protection Circuit Breaker', spec: document.getElementById('res-mcb-rating').textContent, qty: '1 Pcs' },
+                { desc: 'Magnetic Contactor Utama', spec: document.getElementById('res-contactor-rating').textContent, qty: '1 Set' },
+                { desc: 'Thermal Overload Relay (TOR)', spec: document.getElementById('res-tor-range').textContent, qty: '1 Pcs' },
+                { desc: 'Phase Failure Relay Proteksi Tegangan', spec: 'CHINT XJ3-G 380VAC', qty: '1 Pcs' },
+                { desc: 'Auxiliary MCB Kontrol', spec: 'CHINT NXB-63 1P C2A / C6A', qty: '1 Pcs' },
+                { desc: 'Kabel Daya Utama', spec: document.getElementById('res-cable-size').textContent, qty: document.getElementById('motor-cable-len').value + ' Meter' },
+                { desc: 'Kabel Kontrol Internal', spec: 'NYAF ' + document.getElementById('motor-control-cable-size').value + ' mm² Tembaga Serabut', qty: '1 Roll' },
+                { desc: 'Push Button START / STOP', spec: 'CHINT NP2-EA31 / NP2-EA42', qty: '2 Pcs' },
+                { desc: 'Pilot Lamp ND16', spec: 'CHINT ND16 220V (Hijau, Merah, Kuning)', qty: '3 Pcs' }
+            ];
+
+            bomTbody.innerHTML = bomList.map((item, i) => `
+                <tr class="border-b border-gray-200">
+                    <td class="p-2 border-r text-center">${i + 1}</td>
+                    <td class="p-2 border-r font-bold">${item.desc}</td>
+                    <td class="p-2 border-r font-mono">${item.spec}</td>
+                    <td class="p-2 border-r text-center">${item.qty}</td>
+                    <td class="p-2 text-gray-500">Standard CHINT Electric</td>
+                </tr>
+            `).join('');
+
+            window.print();
+        }
+
+        function resetAllCalculators() {
+            if (confirm("Reset seluruh parameter ke pengaturan awal?")) {
+                document.getElementById('motor-power').value = "7.5";
+                document.getElementById('motor-power-unit').value = "kW";
+                document.getElementById('motor-phase').value = "3";
+                document.getElementById('motor-voltage').value = "380";
+                document.getElementById('motor-starter').value = "DOL";
+                calculateMotor();
+                calculateCableTab();
+                calculateCapacitor();
+            }
+        }
+
+        function applyMotorPreset(power, unit) {
+            document.getElementById('motor-power').value = power;
+            document.getElementById('motor-power-unit').value = unit;
+            if (power >= 11) {
+                document.getElementById('motor-starter').value = "STAR_DELTA";
+            } else {
+                document.getElementById('motor-starter').value = "DOL";
+            }
+            calculateMotor();
+        }
+
+        function toggleMotorPhaseOptions() {
+            const phase = document.getElementById('motor-phase').value;
+            const voltSelect = document.getElementById('motor-voltage');
+            if (phase === "1") {
+                voltSelect.value = "220";
+            } else {
+                voltSelect.value = "380";
+            }
+        }
+
+        function toggleCablePhaseOptions() {
+            const phase = document.getElementById('cable-phase').value;
+            const voltInput = document.getElementById('cable-voltage');
+            if (phase === "1") {
+                voltInput.value = "220";
+            } else {
+                voltInput.value = "380";
+            }
+        }
+    </script>
+
+<!-- MASTER KATALOG CHINT -->
+<div id="chint-master-panel" class="fixed bottom-5 left-5 z-[95] w-[min(430px,calc(100vw-2rem))] hidden">
+  <div class="bg-slate-950/95 backdrop-blur border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+    <div class="px-4 py-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+      <div>
+        <div class="text-sm font-black text-white">📚 MASTER KATALOG CHINT</div>
+        <div class="text-[10px] text-slate-400">Rekomendasi dari hasil kalkulator motor</div>
+      </div>
+      <button onclick="toggleChintMaster()" class="text-slate-400 hover:text-white text-lg">×</button>
+    </div>
+    <div id="chint-master-content" class="p-4 max-h-[65vh] overflow-y-auto space-y-3"></div>
+    <div class="px-4 py-2 border-t border-slate-800 text-[9px] text-slate-500">
+      Sumber katalog: CHINT Indonesia. Rating di atas adalah kandidat awal; verifikasi tipe lengkap, coil, pole, breaking capacity, koordinasi proteksi, dan datasheet sebelum pembelian/wiring.
+    </div>
+  </div>
+</div>
+<button id="chint-master-btn" onclick="toggleChintMaster()" class="fixed bottom-5 left-5 z-[90] px-4 py-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow-xl border border-red-400/30">
+  📚 MASTER CHINT
+</button>
+
+<script>
+/* =========================================================
+   MASTER KATALOG CHINT — sumber referensi resmi CHINT Indonesia
+   Jangan dianggap sebagai pengganti datasheet/selection engineering.
+   ========================================================= */
+const CHINT_MASTER_CATALOG = {
+  source: 'CHINT Indonesia',
+  sourceUrl: 'https://www.chint.id/product',
+  products: [
+    {
+      family:'MCB', series:'NXB-63H', model:'CHINT NXB-63H',
+      current:[1,2,4,6,10,16,20,25,32,40,50,63], poles:[1,2,3,4], breaking:'10 kA', curve:'B/C/D',
+      verified:true, url:'https://www.chint.id/product/mcb-miniature-circuit-breaker-chint-nxb-63h-3p-10a-p906684.aspx'
+    },
+    {
+      family:'MCB', series:'NXB-63', model:'CHINT NXB-63',
+      current:[1,2,4,6,10,16,20,25,32,40,50,63], poles:[1,2,3,4], breaking:'6 kA', curve:'B/C/D',
+      verified:true, url:'https://www.chint.id/product/mcb-miniature-circuit-breaker-chint-nxb-63-p863228.aspx'
+    },
+    {
+      family:'MCCB', series:'NXM', model:'CHINT NXM',
+      current:[63,80,100,125,160,200,250,315,400,500,630,800], poles:[2,3,4],
+      verified:false, note:'Gunakan seri/frame sesuai kebutuhan dan datasheet model aktual.', url:'https://www.chint.id/product'
+    },
+    {
+      family:'Contactor', series:'NXC', model:'CHINT NXC-06M', amp:6, verified:false, url:'https://www.chint.id/product'
+    },
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-09',amp:9,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-12',amp:12,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-18',amp:18,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-25',amp:25,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-32',amp:32,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-40',amp:40,verified:false,url:'https://www.chint.id/product'},
+    {
+      family:'Contactor', series:'NXC', model:'CHINT NXC-65', amp:65, verified:true,
+      spec:'AC-3 65 A / 30 kW @ 380 V; 3P; 1NO + 1NC',
+      url:'https://www.chint.id/product/contactor-chint-nxc-65-30kw-3p-220v-1no-1nc-p892196.aspx'
+    },
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-80',amp:80,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-95',amp:95,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-120',amp:120,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-160',amp:160,verified:false,url:'https://www.chint.id/product'},
+    {
+      family:'Contactor', series:'NXC', model:'CHINT NXC-185', amp:185, verified:true,
+      spec:'AC-3 185 A / 90 kW @ 380 V; 3P; 2NO + 2NC',
+      url:'https://www.chint.id/product/contactor-chint-nxc-185-3-poles-ac-3-380-v-185a-90kw-p891945.aspx'
+    },
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-225',amp:225,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-300',amp:300,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-400',amp:400,verified:false,url:'https://www.chint.id/product'},
+    {family:'Contactor',series:'NXC',model:'CHINT NXC-630',amp:630,verified:false,url:'https://www.chint.id/product'},
+    {
+      family:'Thermal Overload Relay', series:'NXR', model:'CHINT NXR', min:0.1, max:630,
+      verified:true, spec:'Rentang keluarga NXR 0,1–630 A; proteksi overload dan phase failure; IEC/EN 60947-4-1 / 60947-5-1',
+      url:'https://www.chint.id/product/thermal-overload-relay-chint-nxr-p863330.aspx'
+    },
+    {
+      family:'Soft Starter', series:'NJR2', model:'CHINT NJR2', verified:false,
+      note:'Pilih frame/rating berdasarkan motor dan datasheet unit.', url:'https://www.chint.id/product'
+    },
+    {
+      family:'Inverter/VFD', series:'NVF2G', model:'CHINT NVF2G', verified:false,
+      note:'Pilih rating inverter berdasarkan motor, overload capability, dan duty.', url:'https://www.chint.id/product'
+    }
+  ]
+};
+
+function toggleChintMaster(){
+  document.getElementById('chint-master-panel').classList.toggle('hidden');
+  document.getElementById('chint-master-btn').classList.toggle('hidden');
+}
+function chintMasterLink(url,label='Lihat CHINT'){
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-brand-300 font-bold">${label} ↗</a>`;
+}
+function getChintContactorCandidates(amp){
+  return CHINT_MASTER_CATALOG.products.filter(p=>p.family==='Contactor' && p.amp>=amp).sort((a,b)=>a.amp-b.amp).slice(0,3);
+}
+function getChintBreakerCandidate(flc, starter, phase){
+  const target = flc * (starter==='DOL' ? 2.0 : 1.5);
+  if(flc<=50){
+    const p=CHINT_MASTER_CATALOG.products.find(x=>x.series==='NXB-63H');
+    const amp=p.current.find(a=>a>=target) || 63;
+    return {...p, selectedAmp:amp, display:`${p.model} ${phase}P C${amp}A`};
+  }
+  const p=CHINT_MASTER_CATALOG.products.find(x=>x.series==='NXM');
+  const amp=p.current.find(a=>a>=target) || p.current[p.current.length-1];
+  return {...p, selectedAmp:amp, display:`${p.model} ${phase}P ${amp}A`};
+}
+function getChintTorCandidate(flc){
+  // NXR is a family with many individual dial ranges. Existing calculator result remains the authoritative selected range.
+  const p=CHINT_MASTER_CATALOG.products.find(x=>x.series==='NXR');
+  return {...p, selectedSetting:flc};
+}
+function updateChintMaster({flc,phase,voltage,starter,power,breakerAmp,contactorObj,torObj}){
+  const box=document.getElementById('chint-master-content');
+  if(!box) return;
+  const breaker=getChintBreakerCandidate(flc,starter,phase);
+  const contactorAmp=starter==='STAR_DELTA' ? flc/Math.sqrt(3) : flc;
+  const contactors=getChintContactorCandidates(contactorAmp);
+  const tor=getChintTorCandidate(flc);
+  const verifiedBadge=(p)=>p.verified
+    ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300">DATA TER-VERIFIKASI</span>'
+    : '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300">VERIFIKASI MODEL</span>';
+  const card=(title,p,extra='')=>`<div class="border border-slate-800 rounded-xl p-3 bg-slate-900/70">
+    <div class="flex items-center justify-between gap-2"><div class="text-xs font-black text-white">${title}</div>${verifiedBadge(p)}</div>
+    <div class="text-sm text-brand-300 font-mono font-bold mt-1">${p.display||p.model}</div>
+    <div class="text-[10px] text-slate-400 mt-1">${p.spec||p.note||''}</div>
+    ${extra}
+    <div class="mt-2">${chintMasterLink(p.url)}</div>
+  </div>`;
+  let html=`<div class="grid grid-cols-2 gap-2 text-[10px] mb-1">
+    <div class="bg-slate-900 rounded-lg p-2"><span class="text-slate-500">FLC</span><br><b class="text-white">${flc.toFixed(2)} A</b></div>
+    <div class="bg-slate-900 rounded-lg p-2"><span class="text-slate-500">Starter</span><br><b class="text-white">${starter}</b></div>
+  </div>`;
+  html += card('MCCB / MCB',breaker,`<div class="text-[10px] text-slate-500 mt-1">Target proteksi kalkulator: ${breaker.selectedAmp} A. Pole/curve/breaking capacity harus disesuaikan dengan sistem.</div>`);
+  const contactorCards=contactors.map((p,i)=>card(`Contactor kandidat #${i+1}`,{...p,display:`${p.model} — ${p.amp} A AC-3`},`<div class="text-[10px] text-slate-500 mt-1">Kebutuhan minimum kalkulator: ${contactorAmp.toFixed(2)} A AC-3.</div>`)).join('');
+  html += contactorCards;
+  html += card('Thermal Overload Relay',tor,`<div class="text-[10px] text-slate-500 mt-1">Setting kalkulator: ${tor.selectedSetting.toFixed(2)} A. Pilih dial range NXR yang benar-benar mencakup setting ini.</div>`);
+  box.innerHTML=html;
+}
+
+// Expose a compact catalog context to ELECTRO AI
+function getChintMasterContext(){
+  return {
+    source: CHINT_MASTER_CATALOG.source,
+    sourceUrl: CHINT_MASTER_CATALOG.sourceUrl,
+    verifiedProducts: CHINT_MASTER_CATALOG.products.filter(p=>p.verified).map(p=>({family:p.family,series:p.series,model:p.model,spec:p.spec||null,url:p.url})),
+    note:'Produk yang belum terverifikasi individual hanya merupakan kandidat seri; jangan diperlakukan sebagai data spesifikasi final.'
+  };
+}
+</script>
+
+<!-- ELECTRO AI PANEL -->
+<div id="electro-ai" class="fixed bottom-5 right-5 z-[100]">
+  <button id="electro-ai-toggle" onclick="toggleElectroAI()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-black px-5 py-3 rounded-full shadow-2xl border border-brand-300 transition">
+    🤖 ELECTRO AI
+  </button>
+  <div id="electro-ai-panel" class="hidden mt-3 w-[min(92vw,420px)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+    <div class="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+      <div><div class="font-black text-brand-300">ELECTRO AI</div><div class="text-[11px] text-slate-400">Asisten kalkulator listrik</div></div>
+      <button onclick="toggleElectroAI()" class="text-slate-400 hover:text-white">✕</button>
+    </div>
+    <div id="electro-ai-messages" class="h-72 overflow-y-auto p-3 space-y-3 text-sm">
+      <div class="bg-slate-800 rounded-xl p-3 text-slate-200">Halo! Saya bisa membaca parameter motor dari kalkulator ini. Tanyakan misalnya: <b>“jelaskan pemilihan MCCB dan kontaktor saya”</b>.</div>
+    </div>
+    <div class="p-3 border-t border-slate-700">
+      <div class="flex gap-2">
+        <textarea id="electro-ai-input" rows="2" placeholder="Tulis pertanyaan..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-2 text-sm outline-none focus:border-brand-400"></textarea>
+        <button id="electro-ai-send" onclick="sendElectroAI()" class="px-4 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-black">Kirim</button>
+      </div>
+      <div class="mt-2 flex gap-2">
+        <button onclick="askElectroAI('Analisis hasil perhitungan motor saya dan jelaskan komponen utamanya.')" class="text-[10px] px-2 py-1 rounded bg-slate-800 hover:bg-slate-700">Analisis</button>
+        <button onclick="askElectroAI('Jelaskan rangkaian starter yang sedang dipilih dan fungsi setiap komponennya.')" class="text-[10px] px-2 py-1 rounded bg-slate-800 hover:bg-slate-700">Rangkaian</button>
+      </div>
+      <div class="text-[9px] text-slate-500 mt-2">AI adalah alat bantu. Verifikasi sizing terhadap nameplate, datasheet, standar, dan kondisi instalasi nyata.</div>
+    </div>
+  </div>
+</div>
+<script>
+function toggleElectroAI(){ document.getElementById('electro-ai-panel').classList.toggle('hidden'); }
+function getElectroContext(){
+  const get=(id)=>{const e=document.getElementById(id); return e ? (e.value ?? e.textContent ?? '') : '';};
+  const text=(id)=>{const e=document.getElementById(id); return e ? e.textContent.trim() : '';};
+  return {
+    activeModule:'Motor & Komponen CHINT',
+    motor:{power:get('motor-power'),unit:get('motor-power-unit'),phase:get('motor-phase'),voltage:get('motor-voltage'),starter:get('motor-starter'),cosphi:get('motor-cosphi'),efficiency:get('motor-eff'),cableLength:get('motor-cable-len'),maxVoltageDrop:get('motor-max-drop'),conductor:get('motor-conductor'),installMethod:get('motor-install-method')},
+    result:{mcb:text('res-mcb-rating'),contactor:text('res-contactor-rating'),tor:text('res-tor-range'),cable:text('res-cable-size')},
+    chintMaster:getChintMasterContext()
+  };
+}
+function addElectroMessage(role, text){
+  const box=document.getElementById('electro-ai-messages'); const d=document.createElement('div');
+  d.className=role==='user'?'ml-8 bg-brand-500/15 border border-brand-500/20 rounded-xl p-3 text-slate-100':'mr-8 bg-slate-800 rounded-xl p-3 text-slate-200';
+  d.textContent=text; box.appendChild(d); box.scrollTop=box.scrollHeight;
+}
+function askElectroAI(q){ document.getElementById('electro-ai-input').value=q; sendElectroAI(); }
+async function sendElectroAI(){
+  const input=document.getElementById('electro-ai-input'); const btn=document.getElementById('electro-ai-send'); const q=input.value.trim(); if(!q)return;
+  addElectroMessage('user',q); input.value=''; btn.disabled=true; btn.textContent='...';
+  const loading='Saya sedang menganalisis parameter kalkulator...'; addElectroMessage('assistant',loading);
+  const box=document.getElementById('electro-ai-messages'); const last=box.lastElementChild;
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:getElectroContext()})});
+    const data=await r.json(); if(!r.ok) throw new Error(data.error||'Server AI tidak merespons');
+    last.textContent=data.reply||'Tidak ada jawaban.';
+  }catch(e){ last.textContent='Belum tersambung ke server AI. Pastikan backend /api/chat sudah dijalankan.\n\n'+e.message; }
+  btn.disabled=false; btn.textContent='Kirim';
+}
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter')sendElectroAI();});
+</script>
+
+</body>
+</html>
